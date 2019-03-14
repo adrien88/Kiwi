@@ -78,14 +78,21 @@ class ePDO {
     * @return error:(string)errormessage
     *
     */
-    final public function Update($table, array $data) {
+    final public function Update($table, array $data = [], array $cond = []) {
 
-        //
-        $prepreq = implode(',',array_keys($data));
-        $prepval = ':'.implode(',:',array_keys($data));
+        // write request
+        $req = 'UPDATE '.$table.' SET (';
+        foreach ($data as $key => $value) {
+            $req .= ''.$key.' =: '.$value.', ';
+        }
+
+        $req.=') WHERE ';
+        foreach ($cond as $key => $value) {
+            $req .= ''.$key.' = '.$value.' AND ';
+        }
+        $req = substr($req,0,-4).';';
 
         // Sand
-        $req = "UPDATE $table VALUES ($prepval)";
         $stat = $this->PDO->prepare($req);
         $stat->execute($data);
         if(
