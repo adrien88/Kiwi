@@ -8,23 +8,14 @@
 */
 class Router {
 
-    public static function auto( $targetype )
+    public static function auto()
     {
         // get route
         $URL = self::coreGetRoute(['module','function','args']);
+        $alias = RouterManager::get($URL['module']);
 
-        switch ( $targetype )
-        {
-            case CLASSNAME:
-                if (class_exists($URL['module'])){
-                    $URL['module']::auto();
-                }
-            break;
-            default:
-                if (file_exists('controler/'.$URL['module'].'.php')){
-                    include 'controler/'.$URL['module'].'.php';
-                }
-            break;
+        if (file_exists('controler/'.$alias)) {
+            include 'controler/'.$alias;
         }
     }
 
@@ -32,12 +23,13 @@ class Router {
     * if isset $_GET
     * Return route array from $_GET[0]
     *
-    * @param : data structure array[]
+    * @param array : data structure array[]
     * ex : ( ['page','function', 'args'] )
     *
-    * @return : structured path
+    * @return array
     * ex for : 'foo/bar/camel/case' will return :
     * array
+    *   ['path'] = foo/bar/camel/case
     *   ['docroot'] = ./../../../
     *   ['page'] = 'foo'
     *   ['function'] = 'bar'
@@ -66,12 +58,10 @@ class Router {
                 $out[$elem] = array_shift($parts);
             }
             $out[$keyargs]=$parts;
-
             // $out['page']=str_replace('_','.',array_shift($parts));
             // $out['obj']=array_shift($parts);
             // $out=array_merge($out,$parts);
             // RouterManager::get($url);
-
             return $out;
         }
         return false;

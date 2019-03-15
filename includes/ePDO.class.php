@@ -5,7 +5,6 @@
  *  To change config PDO : please, edit the config.ini file at root of website.
  *  Methods allow you to all basics functions
  */
-
 class ePDO {
 
     // PDO
@@ -80,17 +79,23 @@ class ePDO {
     */
     final public function Update($table, array $data = [], array $cond = []) {
 
-        // write request
-        $req = 'UPDATE '.$table.' SET (';
-        foreach ($data as $key => $value) {
-            $req .= ''.$key.' =: '.$value.', ';
-        }
+        $sdata = [];
 
-        $req.=') WHERE ';
+        // write request
+        $req = 'UPDATE '.$table.' SET ';
+        foreach ($data as $key => $value) {
+            $req .= ''.$key.' = :'.$key.', ';
+            $sdata[$key]=$value;
+        }
+        $req = substr($req,0,-2);
+
+        $req.=' WHERE ';
         foreach ($cond as $key => $value) {
-            $req .= ''.$key.' = '.$value.' AND ';
+            $req .= ''.$key.' = :'.$key.' AND ';
         }
         $req = substr($req,0,-4).';';
+
+        echo $req.'<br>';
 
         // Sand
         $stat = $this->PDO->prepare($req);
@@ -137,13 +142,12 @@ class ePDO {
     * @return error:(string)errormessage
     *
     */
-    final public function Delete($table, array $data) {
+    final public function Delete($table, array $cond) {
         $req = 'DELETE FROM '.$table.' WHERE ';
-        foreach ($data as $key => $value) {
+        foreach ($cond as $key => $value) {
             $req .= ''.$key.' = ? AND ';
         }
         $req = substr($req,0,-4).';';
-
         $stat = $this->PDO->prepare($req);
         $stat->execute($data);
         if(
