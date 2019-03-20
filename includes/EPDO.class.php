@@ -5,22 +5,24 @@
  *  To change config PDO : please, edit the config.ini file at root of website.
  *  Methods allow you to all basics functions
  */
-class ePDO {
+class EPDO {
 
     // PDO
-    private $PDO;
+    private $PDO = null;
+    public static $instance = null;
 
     /**
     * Construct :
     * @param void
-    * @return success:object:ePDO
+    * @return success:object:EPDO
     * @return error:false
     *
     */
-    public function __construct(){
 
-        // load config
-        $DB=Config::load('config.ini')['database'];
+    public function __construct($params = null){
+
+        // Load congig
+        $DB = $params ?? Config::load('config.ini')['database'];
 
         // Init DB connect
         try {
@@ -29,16 +31,26 @@ class ePDO {
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES ".$DB['charset']
             ];
-
-            // connect
             $this->PDO = new PDO ($req,$DB['login'],$DB['passwd'],$options);
+            unset($DB);
         }
         catch (PDOException $e){
             die('Database connection error : '.$e);
-            return false;
         }
-        // unset
-        unset($DB);
+    }
+
+    /**
+    * Create instance to static using
+    * @param void
+    * @return success:new_instance
+    *
+    */
+    public static function getInstance()
+    {
+        if(is_null(self::$instance)){
+            self::$instance = new EPDO(null);
+        }
+        return self::$instance;
     }
 
 
@@ -75,7 +87,7 @@ class ePDO {
     * @param : string tablename; array : data []
     * @return success:true
     * @return error:(string)errormessage
-    *
+    * 
     */
     final public function Update($table, array $data = [], array $cond = []) {
 
@@ -85,7 +97,7 @@ class ePDO {
         $req = 'UPDATE '.$table.' SET ';
         foreach ($data as $key => $value) {
             $req .= ''.$key.' = :'.$key.', ';
-            $sdata[$key]=$value;
+            // $sdata[$key]=$value;
         }
         $req = substr($req,0,-2);
 
