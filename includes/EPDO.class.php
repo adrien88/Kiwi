@@ -10,6 +10,7 @@ class EPDO {
     // PDO
     private $PDO = null;
     public static $instance = null;
+    private $tablename = '';
 
     /**
     * Construct :
@@ -54,6 +55,15 @@ class EPDO {
     }
 
 
+    public function getTable($tablename)
+    {
+        if(isset($tablename)){
+            $this->tablename = $tablename;
+        }
+        return $this->tablename;
+    }
+
+
     /**
     * Insert data into table
     * @param : string tablename; array : data []
@@ -61,13 +71,13 @@ class EPDO {
     * @return error:(string)errormessage
     *
     */
-    public function Insert($table, array $data) {
+    public function insert($table, array $data) {
         // formater la requête
         $prepreq = implode(',',array_keys($data));
         $prepval = ':'.implode(',:',array_keys($data));
 
         // Sand
-        $req = "INSERT INTO $table ($prepreq) VALUES ($prepval)";
+        $req = "INSERT INTO ".$this->getTable($table)." ($prepreq) VALUES ($prepval)";
         $stat = $this->PDO->prepare($req);
         $stat->execute($data);
         if(
@@ -87,23 +97,22 @@ class EPDO {
     * @param : string tablename; array : data []
     * @return success:true
     * @return error:(string)errormessage
-    * 
+    *
     */
-    final public function Update($table, array $data = [], array $cond = []) {
+    final public function update($table, array $data = [], array $cond = []) {
 
         $sdata = [];
 
         // write request
-        $req = 'UPDATE '.$table.' SET ';
+        $req = 'UPDATE '.$this->getTable($table).' SET ';
         foreach ($data as $key => $value) {
             $req .= ''.$key.' = :'.$key.', ';
-            // $sdata[$key]=$value;
         }
         $req = substr($req,0,-2);
 
         $req.=' WHERE ';
         foreach ($cond as $key => $value) {
-            $req .= ''.$key.' = :'.$key.' AND ';
+            $req .= ''.$key.' = '.$this->PDO->quote($value).' AND ';
         }
         $req = substr($req,0,-4).';';
 
@@ -123,6 +132,7 @@ class EPDO {
         }
     }
 
+
     /**
     * Insert data into table
     * @param : string tablename; array : data []
@@ -130,7 +140,7 @@ class EPDO {
     * @return error:(string)errormessage
     *
     */
-    final public function Select($req,$FETCH = null) {
+    final public function query($req,$FETCH = null) {
         $stat = $this->PDO->prepare($req);
         $stat->execute();
         if(
@@ -154,14 +164,14 @@ class EPDO {
     * @return error:(string)errormessage
     *
     */
-    final public function Delete($table, array $cond) {
+    final public function delete($table, array $cond) {
         $req = 'DELETE FROM '.$table.' WHERE ';
         foreach ($cond as $key => $value) {
-            $req .= ''.$key.' = ? AND ';
+            $req .= ''.$key.' = :'.$key.' AND ';
         }
         $req = substr($req,0,-4).';';
         $stat = $this->PDO->prepare($req);
-        $stat->execute($data);
+        $stat->execute($cond);
         if(
             ($error = $stat->errorInfo()[2])
             && !empty($error)
