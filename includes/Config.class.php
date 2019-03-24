@@ -75,6 +75,7 @@ class Config {
         */
         function following($array,$iter,$ckey=null)
         {
+            $iter++;
             $str='';
             foreach ( $array as $key => $value ) {
 
@@ -82,19 +83,7 @@ class Config {
                 $key = str_replace('\'','\\\'',$key);
 
                 // if is array : use function recusivly
-                if (is_array($value)) {
-                    $iter++;
-                    if(isset($ckey)){
-                        $str .= "[$ckey][$key]\n";
-                    }
-                    else {
-                        $str .= "[$key]\n";
-                    }
-                    $str .= "\t".following($value,$iter,$ckey)."\n";
-                }
-
-                // else stringify
-                else {
+                if (!is_array($value)) {
                     if (is_string($value)) {
                         // escapes values chars
                         $value = str_replace('\'','\\\'',$value);
@@ -111,6 +100,24 @@ class Config {
                     else {
                         $str .= "$key = $value\n";
                     }
+                }
+
+                // else stringify
+                else {
+
+
+                    $tab = '';
+                    for($i=0;$i<$iter;$i++){
+                        $tab.="\t";
+                    }
+                    if(isset($ckey)){
+                        $str .= $tab."[$ckey][$key]\n";
+                    }
+                    else {
+                        $str .= $tab."[$key]\n";
+                    }
+                    $str .= "$tab".following($value,$iter,$key)."\n";
+
                 }
             }
             return $str;
