@@ -105,7 +105,6 @@ class Config {
                 // else stringify
                 else {
 
-
                     $tab = '';
                     for($i=0;$i<$iter;$i++){
                         $tab.="\t";

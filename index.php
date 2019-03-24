@@ -23,30 +23,39 @@ print_r(EPDO::getInstance()->insert([
     'thumbnail'=>'',
     'keywords'=>'',
 ]));
+
 echo '<br>';
-print_r(EPDO::getInstance()->delete('pages',['url'=>'exemple2']));
+print_r(EPDO::getInstance()->delete(['url'=>'exemple2']));
 echo '<br>';
 print_r(EPDO::getInstance()->query('SELECT title FROM pages WHERE url=\'exemple\''));
 echo '<br>';
-print_r(EPDO::getInstance()->update('pages',['url'=>'exemple2','title'=>'exemple n°2'],['url'=>'exemple']));
+print_r(EPDO::getInstance()->update(['url'=>'exemple2','title'=>'exemple n°2'],['url'=>'exemple']));
 echo '<br>';
 print_r(EPDO::getInstance()->query('SELECT title FROM pages WHERE url=\'exemple2\''));
+echo '<br><pre>';
+print_r(EPDO::getInstance()->getStruct());
+echo '</pre>';
 
 
-Config::save('test.ini',
-    [
-        'test'=>0,
-        'chose'=>false,
-        'truc'=>"/truc/machin.php",
-        'table'=>
-        [
-            "truc"=> 'heu',
-            "sadisme"=> [
-                'test'=>true
-            ]
-        ]
-    ]);
 
+
+//
+// Config::save('test.ini',
+//     [
+//         'test'=>0,
+//         'chose'=>false,
+//         'truc'=>"/truc/machin.php",
+//         'table'=>
+//         [
+//             "truc2"=> 'heu',
+//             "truc3"=> 'heu',
+//             "sadisme"=> [
+//                 'test'=>true
+//             ]
+//         ]
+//     ]);
+//
+// echo '<br><br><pre>'.print_r(Config::load('test.ini'),1).'</pre>';
 
 
 

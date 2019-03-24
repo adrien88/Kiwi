@@ -74,7 +74,7 @@ class EPDO {
     * Associate to a table
     * @param tablename:string
     * @return succes:table_structure:array
-    *
+    * COLUMN_NAME,COLLATION_NAME,COLUMN_TYPE,COLUMN_KEY
     */
     public function getStruct($table = null)
     {
@@ -82,7 +82,15 @@ class EPDO {
         WHERE TABLE_NAME = \''.$this->getTable($table).'\'
         ORDER BY ORDINAL_POSITION;';
         $stat = $this->PDO->query($req);
-        return $stat->fetchAll();
+        $out = [];
+        $i = 0;
+        foreach($stat->fetchAll() as $col){
+            if(!is_float($i/2)){
+                $out[] = $col;
+            }
+            $i++;
+        }
+        return $out;
     }
 
     /**
@@ -111,6 +119,9 @@ class EPDO {
             return true;
         }
     }
+
+
+    
 
     /**
     * Insert data into table
