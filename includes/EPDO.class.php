@@ -10,7 +10,9 @@ class EPDO {
     // PDO
     private $PDO = null;
     public static $instance = null;
+
     private $tablename = '';
+    private $tableStruct = '';
 
     /**
     * Construct :
@@ -68,6 +70,20 @@ class EPDO {
         return $this->tablename;
     }
 
+    /**
+    * Associate to a table
+    * @param tablename:string
+    * @return succes:table_structure:array
+    *
+    */
+    public function getStruct($table = null)
+    {
+        $req = 'SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = \''.$this->getTable($table).'\'
+        ORDER BY ORDINAL_POSITION;';
+        $stat = $this->PDO->query($req);
+        return $stat->fetchAll();
+    }
 
     /**
     * Insert data into table
@@ -96,7 +112,6 @@ class EPDO {
         }
     }
 
-
     /**
     * Insert data into table
     * @param : string tablename; array : data []
@@ -104,7 +119,7 @@ class EPDO {
     * @return error:(string)errormessage
     *
     */
-    final public function update($table, array $data = [], array $cond = []) {
+    final public function update(array $data = [], array $cond = [],$table = null) {
 
         $sdata = [];
 
@@ -169,8 +184,8 @@ class EPDO {
     * @return error:(string)errormessage
     *
     */
-    final public function delete($table, array $cond) {
-        $req = 'DELETE FROM '.$table.' WHERE ';
+    final public function delete(array $cond,$table = null) {
+        $req = 'DELETE FROM '.$this->getTable($table).' WHERE ';
         foreach ($cond as $key => $value) {
             $req .= ''.$key.' = :'.$key.' AND ';
         }
