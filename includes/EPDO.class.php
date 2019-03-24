@@ -54,8 +54,13 @@ class EPDO {
         return self::$instance;
     }
 
-
-    public function getTable($tablename)
+    /**
+    * Associate to a table
+    * @param tablename:string
+    * @return tablename:string
+    *
+    */
+    public function getTable($tablename = null)
     {
         if(isset($tablename)){
             $this->tablename = $tablename;
@@ -71,7 +76,7 @@ class EPDO {
     * @return error:(string)errormessage
     *
     */
-    public function insert($table, array $data) {
+    public function insert(array $data,$table = null) {
         // formater la requête
         $prepreq = implode(',',array_keys($data));
         $prepval = ':'.implode(',:',array_keys($data));

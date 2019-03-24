@@ -7,14 +7,16 @@ spl_autoload_register(function ($class) {
     include 'includes/' . $class . '.class.php';
 });
 
-
 // $ePDO = new ePDO();
 // ePDO::connect();
 
-print_r(EPDO::getInstance()->Insert('pages',[
+// associate
+EPDO::getInstance()->getTable('pages');
+
+print_r(EPDO::getInstance()->insert([
     'id_owner'=>1,
     'url'=>'exemple',
-    'title'=>'exemple',
+    'title'=>'exemple n°1',
     'description'=>'exemple',
     'content'=>'exemple',
     'publication'=>time(),
@@ -22,10 +24,28 @@ print_r(EPDO::getInstance()->Insert('pages',[
     'keywords'=>'',
 ]));
 echo '<br>';
+print_r(EPDO::getInstance()->delete('pages',['url'=>'exemple2']));
+echo '<br>';
+print_r(EPDO::getInstance()->query('SELECT title FROM pages WHERE url=\'exemple\''));
+echo '<br>';
+print_r(EPDO::getInstance()->update('pages',['url'=>'exemple2','title'=>'exemple n°2'],['url'=>'exemple']));
+echo '<br>';
+print_r(EPDO::getInstance()->query('SELECT title FROM pages WHERE url=\'exemple2\''));
 
 
-
-
+Config::save('test.ini',
+    [
+        'test'=>0,
+        'chose'=>false,
+        'truc'=>"/truc/machin.php",
+        'table'=>
+        [
+            "truc"=> 'heu',
+            "sadisme"=> [
+                'test'=>true
+            ]
+        ]
+    ]);
 
 
 
@@ -52,3 +72,6 @@ echo '<br>';
 //         return 0;
 //     }
 // }
+//
+//
+// peste variole antrax

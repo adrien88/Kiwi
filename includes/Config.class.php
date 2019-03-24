@@ -23,24 +23,34 @@ class Config {
     }
 
     /**
-    * save ini :
-    * @param string:filename;array:config
-    * @return array:bool(false)
+    * enable or disable autosave
+    * @param bool:make_statut
+    * @return bool:statut
     */
-    public static function autosave($bool=null)
+    public static function autosave(bool $bool=null)
     {
-        if (isset($bool) and is_bool($bool)){
+        if (isset($bool)){
             $this->AS = $bool;
-            return true;
         }
-        else {
-            return $this->AS;
+        return $this->AS;
+    }
+
+    /**
+    * filename setter
+    * @param string:make_statut
+    * @return string:statut
+    */
+    public static function set($filename=null)
+    {
+        if (isset($filename)){
+            $this->FILENAME = $filename;
         }
+        return $this->FILENAME;
     }
 
 
     /**
-    * save ini :
+    * load ini :
     * @param string:filename;array:config
     * @return array:bool(false)
     */
@@ -63,7 +73,7 @@ class Config {
         * @param array
         * @return string
         */
-        function following( $array )
+        function following($array,$iter,$ckey=null)
         {
             $str='';
             foreach ( $array as $key => $value ) {
@@ -73,8 +83,14 @@ class Config {
 
                 // if is array : use function recusivly
                 if (is_array($value)) {
-                    $str .= "[$key]\n";
-                    $str .= "\t".following($value)."\n";
+                    $iter++;
+                    if(isset($ckey)){
+                        $str .= "[$ckey][$key]\n";
+                    }
+                    else {
+                        $str .= "[$key]\n";
+                    }
+                    $str .= "\t".following($value,$iter,$ckey)."\n";
                 }
 
                 // else stringify
@@ -83,6 +99,14 @@ class Config {
                         // escapes values chars
                         $value = str_replace('\'','\\\'',$value);
                         $str .= "$key = '$value'\n";
+                    }
+                    else if (is_bool($value)) {
+                        if ($value === true){
+                            $str .= "$key = true\n";
+                        }
+                        else {
+                            $str .= "$key = false\n";
+                        }
                     }
                     else {
                         $str .= "$key = $value\n";
@@ -93,7 +117,7 @@ class Config {
         }
 
         // config ini file file filled with ini variables
-        return file_put_contents( $filename, following($array) );
+        return file_put_contents( $filename, following($array,0));
     }
 
     /**
