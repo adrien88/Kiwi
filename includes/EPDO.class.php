@@ -42,6 +42,16 @@ class EPDO {
         }
     }
 
+
+
+    /**
+    * Alias for getInstace cauze i'm bit lazy...
+    */
+    public static function do()
+    {
+        return self::getInstance();
+    }
+
     /**
     * Create instance to static using
     * @param void
@@ -121,7 +131,7 @@ class EPDO {
     }
 
 
-    
+
 
     /**
     * Insert data into table
@@ -166,7 +176,33 @@ class EPDO {
 
     /**
     * Insert data into table
-    * @param : string tablename; array : data []
+    * @param :
+    * @return success:array
+    * @return error:(string)errormessage
+    *
+    */
+    final public function select($what='*',$where=null,$like=null,$orderby=null) {
+        $what = is_array($what) ? implode(',', $what) : $what;
+
+        $stat = $this->PDO->prepare($req);
+        $stat->execute();
+        if(
+            ($error = $stat->errorInfo()[2])
+            && !empty($error)
+        ){
+            throw new Exception($error);
+            return false;
+        }
+        else {
+            $data = $stat->fetchAll($FETCH);
+            return isset($data[1]) ? $data : $data[0];
+        }
+    }
+
+
+    /**
+    * query data into table
+    * @param : string query
     * @return success:array
     * @return error:(string)errormessage
     *
