@@ -5,13 +5,15 @@
  *  To change config PDO : please, edit the config.ini file at root of website.
  *  Methods allow you to all basics functions
  */
-class EPDO {
+class EPDO2 {
 
-    // PDO
+    // PDO instance
     private static $PDO = null;
 
-    private $tablename = '';
-    private $tableStruct = '';
+    // table locking
+    private static $tablename = '';
+    // get table name
+    private static $tableStruct = '';
 
     /**
     * Construct :
@@ -64,9 +66,9 @@ class EPDO {
     public static function getTable($tablename = null)
     {
         if(isset($tablename)){
-            $this->tablename = $tablename;
+            self::$tablename = $tablename;
         }
-        return $this->tablename;
+        return self::$tablename;
     }
 
     /**
@@ -188,7 +190,6 @@ class EPDO {
         }
     }
 
-
     /**
     * query data into table
     * @param : string query
@@ -196,7 +197,7 @@ class EPDO {
     * @return error:false:throw:error_message
     *
     */
-    final public static function query($req,$FETCH = null) {
+    final public static function query($req, $FETCH = null) {
         $stat = self::$PDO->prepare($req);
         $stat->execute();
         if(
