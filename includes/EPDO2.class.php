@@ -22,7 +22,6 @@ class EPDO2 {
     * @return error:false
     *
     */
-
     public function __construct($params = null){
         self::connectDB();
     }
