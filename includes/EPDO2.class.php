@@ -26,7 +26,6 @@ class EPDO2 {
         self::connectDB();
     }
 
-
     /**
     * Create instance to static using
     * @param void
@@ -94,6 +93,35 @@ class EPDO2 {
     }
 
     /**
+    * query data into table
+    * @param : string query
+    * @return success:array
+    * @return error:false:throw:error_message
+    *
+    */
+    final public static function query($req, $FETCH = null) {
+        $stat = self::$PDO->query($req);
+
+        if(
+            ($error = $stat->errorInfo()[2])
+            && !empty($error)
+        ){
+            return $error;
+        }
+        else {
+            if (!is_bool($stat)){
+                $data = $stat->fetchAll($FETCH);
+                // var_dump($data);
+                return isset($data[1]) ? $data : $data[0];
+            }
+            else{
+                return 'false';
+            }
+        }
+    }
+
+
+    /**
     * Insert data into table
     * @param : string tablename; array : data []
     * @return success:true
@@ -106,22 +134,19 @@ class EPDO2 {
         $prepval = ':'.implode(',:',array_keys($data));
 
         // Sand
-        $req = "INSERT INTO ".$this->getTable($table)." ($prepreq) VALUES ($prepval)";
+        $req = "INSERT INTO ".self::getTable($table)." ($prepreq) VALUES ($prepval)";
         $stat = self::$PDO->prepare($req);
         $stat->execute($data);
         if(
             ($error = $stat->errorInfo()[2]) &&
             !empty($error)
         ) {
-            return $error;
+            return $error."\nreq: ".$req."\n\n";
         }
         else {
             return true;
         }
     }
-
-
-
 
     /**
     * Insert data into table
@@ -135,7 +160,7 @@ class EPDO2 {
         $sdata = [];
 
         // write request
-        $req = 'UPDATE '.$this->getTable($table).' SET ';
+        $req = 'UPDATE '.self::getTable($table).' SET ';
         foreach ($data as $key => $value) {
             $req .= ''.$key.' = :'.$key.', ';
         }
@@ -156,7 +181,7 @@ class EPDO2 {
             ($error = $stat->errorInfo()[2]) &&
             !empty($error)
         ){
-            return $error;
+            return $error."\nreq: ".$req."\n\n";
         }
         else {
             return true;
@@ -189,28 +214,7 @@ class EPDO2 {
         }
     }
 
-    /**
-    * query data into table
-    * @param : string query
-    * @return success:array
-    * @return error:false:throw:error_message
-    *
-    */
-    final public static function query($req, $FETCH = null) {
-        $stat = self::$PDO->prepare($req);
-        $stat->execute();
-        if(
-            ($error = $stat->errorInfo()[2])
-            && !empty($error)
-        ){
-            throw new Exception($error, 1);
-            return false;
-        }
-        else {
-            $data = $stat->fetchAll($FETCH);
-            return isset($data[1]) ? $data : $data[0];
-        }
-    }
+
 
 
     /**
@@ -232,7 +236,7 @@ class EPDO2 {
             ($error = $stat->errorInfo()[2])
             && !empty($error)
         ){
-            return $error;
+            return $error."\nreq: ".$req."\n\n";
         }
         else {
             return true;
