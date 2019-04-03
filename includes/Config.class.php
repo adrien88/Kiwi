@@ -81,41 +81,40 @@ class Config {
 
                 // escapes key chars
                 $key = str_replace('\'','\\\'',$key);
-
-                // if is array : use function recusivly
-                if (!is_array($value)) {
-                    if (is_string($value)) {
-                        // escapes values chars
-                        $value = str_replace('\'','\\\'',$value);
-                        $str .= "$key = '$value'\n";
-                    }
-                    else if (is_bool($value)) {
-                        if ($value === true){
-                            $str .= "$key = true\n";
-                        }
-                        else {
-                            $str .= "$key = false\n";
-                        }
-                    }
-                    else {
-                        $str .= "$key = $value\n";
-                    }
+                $tab = '';
+                for($i=0;$i<$iter;$i++){
+                    $tab.="\t";
                 }
 
-                // else stringify
-                else {
-
-                    $tab = '';
-                    for($i=0;$i<$iter;$i++){
-                        $tab.="\t";
-                    }
+                // if is array : use function recusivly
+                if (is_array($value)) {
                     if(isset($ckey)){
                         $str .= $tab."[$ckey][$key]\n";
                     }
                     else {
                         $str .= $tab."[$key]\n";
                     }
-                    $str .= "$tab".following($value,$iter,$key)."\n";
+                    $str .= following($value,$iter,$key)."\n";
+                }
+
+                // else stringify
+                else {
+                    if (is_string($value)) {
+                        // escapes values chars
+                        $value = str_replace('\'','\\\'',$value);
+                        $str .= $tab."'$key' = '$value'\n";
+                    }
+                    else if (is_bool($value)) {
+                        if ($value === true){
+                            $str .= $tab."'$key' = true\n";
+                        }
+                        else {
+                            $str .= $tab."'$key' = false\n";
+                        }
+                    }
+                    else {
+                        $str .= $tab."'$key' = $value\n";
+                    }
 
                 }
             }
