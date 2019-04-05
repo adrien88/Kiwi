@@ -7,13 +7,11 @@ spl_autoload_register(function ($class) {
     include 'includes/' . $class . '.class.php';
 });
 
-// $ePDO = new ePDO();
-// ePDO::connect();
+echo '<br>Tests unitaires : <br><pre>';
 
-// associate
-EPDO::getInstance()->getTable('pages');
+$BDD = new EPDO2();
 
-print_r(EPDO::getInstance()->insert([
+echo $BDD->insert([
     'id_owner'=>1,
     'url'=>'exemple',
     'title'=>'exemple n°1',
@@ -22,24 +20,40 @@ print_r(EPDO::getInstance()->insert([
     'publication'=>time(),
     'thumbnail'=>'',
     'keywords'=>'',
-]));
+],'pages');
 
-echo '<br>';
-print_r(EPDO::getInstance()->delete(['url'=>'exemple2']));
-echo '<br>';
-print_r(EPDO::getInstance()->query('SELECT title FROM pages WHERE url=\'exemple\''));
-echo '<br>';
-print_r(EPDO::getInstance()->update(['url'=>'exemple2','title'=>'exemple n°2'],['url'=>'exemple']));
-echo '<br>';
-print_r(EPDO::getInstance()->query('SELECT title FROM pages WHERE url=\'exemple2\''));
-echo '<br><pre>';
-print_r(EPDO::getInstance()->getStruct());
-echo '</pre>';
+print_r($BDD->query('SELECT title FROM pages'));
 
 
+echo '</pre><br>/pre';
 
-
+// associate
+// EPDO::getInstance()->getTable('pages');
 //
+// print_r(EPDO::do()->insert([
+//     'id_owner'=>1,
+//     'url'=>'exemple',
+//     'title'=>'exemple n°1',
+//     'description'=>'exemple',
+//     'content'=>'exemple',
+//     'publication'=>time(),
+//     'thumbnail'=>'',
+//     'keywords'=>'',
+// ]));
+//
+// echo '<br>';
+// print_r(EPDO::do()->delete(['url'=>'exemple2']));
+// echo '<br>';
+// print_r(EPDO::do()->query('SELECT title FROM pages WHERE url=\'exemple\''));
+// echo '<br>';
+// print_r(EPDO::do()->update(['url'=>'exemple2','title'=>'exemple n°2'],['url'=>'exemple']));
+// echo '<br>';
+// print_r(EPDO::do()->query('SELECT title FROM pages WHERE url=\'exemple2\''));
+// echo '<br><pre>';
+// print_r(EPDO::do()->getStruct());
+// echo '</pre>';
+
+
 // Config::save('test.ini',
 //     [
 //         'test'=>0,
@@ -56,7 +70,7 @@ echo '</pre>';
 //     ]);
 //
 // echo '<br><br><pre>'.print_r(Config::load('test.ini'),1).'</pre>';
-
+//
 
 
 // class boolean {
@@ -83,4 +97,3 @@ echo '</pre>';
 // }
 //
 //
-// peste variole antrax
