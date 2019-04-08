@@ -111,12 +111,25 @@ class EPDO2 {
         else {
             if (!is_bool($stat)){
                 $data = $stat->fetchAll($FETCH);
-                // var_dump($data);
                 return isset($data[1]) ? $data : $data[0];
             }
             else{
-                return 'false';
+                return false;
             }
+        }
+    }
+
+    /**
+    * Insert data into table
+    * @param :
+    * @return success:array
+    * @return error:(string)errormessage
+    *
+    */
+    final public static function select($what='*',$where=null,$like=null,$orderby=null) {
+        $what = is_array($what) ? implode(',', $what) : $what;
+        if(isset($where)){
+
         }
     }
 
@@ -168,7 +181,7 @@ class EPDO2 {
 
         $req.=' WHERE ';
         foreach ($cond as $key => $value) {
-            $req .= ''.$key.' = '.$this->PDO->quote($value).' AND ';
+            $req .= ''.$key.' = '.self::$PDO->quote($value).' AND ';
         }
         $req = substr($req,0,-4).';';
 
@@ -189,31 +202,6 @@ class EPDO2 {
     }
 
 
-    /**
-    * Insert data into table
-    * @param :
-    * @return success:array
-    * @return error:(string)errormessage
-    *
-    */
-    final public static function select($what='*',$where=null,$like=null,$orderby=null) {
-        $what = is_array($what) ? implode(',', $what) : $what;
-
-        $stat = self::$PDO->prepare($req);
-        $stat->execute();
-        if(
-            ($error = $stat->errorInfo()[2])
-            && !empty($error)
-        ){
-            throw new Exception($error);
-            return false;
-        }
-        else {
-            $data = $stat->fetchAll($FETCH);
-            return isset($data[1]) ? $data : $data[0];
-        }
-    }
-
 
 
 
@@ -225,7 +213,7 @@ class EPDO2 {
     *
     */
     final public static function delete(array $cond,$table = null) {
-        $req = 'DELETE FROM '.$this->getTable($table).' WHERE ';
+        $req = 'DELETE FROM '.self::getTable($table).' WHERE ';
         foreach ($cond as $key => $value) {
             $req .= ''.$key.' = :'.$key.' AND ';
         }
