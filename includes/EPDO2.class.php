@@ -12,10 +12,16 @@ class EPDO2 {
 
     // table locking
     private static $tablename = '';
+
     // get table name
     private static $tableStruct = '';
 
-    /**
+    // get table name
+    private static $tableRegex = '';
+
+
+
+    /** __________________________________________________________________________________
     * Construct :
     * @param void
     * @return success:object:EPDO
@@ -26,7 +32,9 @@ class EPDO2 {
         self::connectDB();
     }
 
-    /**
+
+
+    /** __________________________________________________________________________________
     * Create instance to static using
     * @param void
     * @return void
@@ -55,7 +63,9 @@ class EPDO2 {
         }
     }
 
-    /**
+
+
+    /** __________________________________________________________________________________
     * Associate to a table
     * @param tablename:string
     * @return tablename:string
@@ -69,7 +79,9 @@ class EPDO2 {
         return self::$tablename;
     }
 
-    /**
+
+
+    /** __________________________________________________________________________________
     * Associate to a table
     * @param tablename:string
     * @return succes:table_structure:array
@@ -92,7 +104,9 @@ class EPDO2 {
         return $out;
     }
 
-    /**
+
+
+    /** __________________________________________________________________________________
     * query data into table
     * @param : string query
     * @return success:array
@@ -119,7 +133,9 @@ class EPDO2 {
         }
     }
 
-    /**
+
+
+    /** __________________________________________________________________________________
     * Insert data into table
     * @param :
     * @return success:array
@@ -134,7 +150,8 @@ class EPDO2 {
     }
 
 
-    /**
+
+    /** __________________________________________________________________________________
     * Insert data into table
     * @param : string tablename; array : data []
     * @return success:true
@@ -161,7 +178,9 @@ class EPDO2 {
         }
     }
 
-    /**
+
+
+    /** __________________________________________________________________________________
     * Insert data into table
     * @param : string tablename; array : data []
     * @return success:true
@@ -203,9 +222,7 @@ class EPDO2 {
 
 
 
-
-
-    /**
+    /** __________________________________________________________________________________
     * Insert data into table
     * @param : string tablename; array : data []
     * @return success:array

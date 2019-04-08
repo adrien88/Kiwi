@@ -2,16 +2,14 @@
 
 class pageBuilder extends parser{
 
-  public function __construct(){
+    private $cache=null;
+
+    public function __construct(){
+        $this->cache=new cache();
+    }
+
     
-  }
 
-  public function read_cache(){
 
-  }
-
-  public function write_cache(){
-
-  }
 
 }
