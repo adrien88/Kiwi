@@ -77,8 +77,8 @@ class EPDO2 {
     */
     public static function getStruct($table = null)
     {
-        $req = 'SELECT * FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = \''.$this->getTable($table).'\'
+        $req = 'SELECT COLUMN_NAME,COLLATION_NAME,COLUMN_TYPE,COLUMN_KEY FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = \''.self::getTable($table).'\'
         ORDER BY ORDINAL_POSITION;';
         $stat = self::$PDO->query($req);
         $out = [];

@@ -11,7 +11,11 @@ echo '<br>Tests unitaires : <br><pre>';
 
 $BDD = new EPDO2();
 
-echo $BDD->insert([
+echo '<br><b>Structure :<b> ';
+print_r($BDD->getStruct('pages'));
+
+
+if ($BDD->insert([
     'id_owner'=>1,
     'url'=>'exemple',
     'title'=>'exemple n°1',
@@ -20,11 +24,19 @@ echo $BDD->insert([
     'publication'=>time(),
     'thumbnail'=>'',
     'keywords'=>'',
-],'pages');
+])){
+    echo '<br><b>Insert success.</b><br>';
+}
 
-echo $BDD->update(['title'=>'exemple n°4','url'=>'exemple2'],['url'=>'exemple']).'<br>';
-echo $BDD->delete(['url'=>'exemple']).'<br>';
+if ($BDD->update(['title'=>'exemple n°4','url'=>'exemple2'],['url'=>'exemple'])){
+    echo '<br><b>Update success.</b><br>';
+}
 
+if ($BDD->delete(['url'=>'exemple'])){
+    echo '<br><b>Delete success.</b><br>';
+};
+
+echo '<br><b>Content :<b> ';
 print_r($BDD->query('SELECT url,title FROM pages'));
 
 
