@@ -33,7 +33,6 @@ class minifier{
     }
   }
 
-
   public static function css($CSS){
     // deletes newlines and tab
     $CSS = preg_replace("#\n|\t#",'',$CSS);
@@ -51,9 +50,20 @@ class minifier{
     //  Delete useless escpaces
     $JS = preg_replace("# {2,}#",'',$JS);
     // delete comments
-    $JS = preg_replace("#/\*[a-z0-9-_. ]+\*/#i",'',$JS);
+    $JS = preg_replace("#/\*[a-z0-9-_.=/\\\*\+ ]+\*/#i",'',$JS);
     // Send CSS
     return $JS;
+  }
+
+  public static function xml($XML){
+    // deletes newlines and tab
+    $XML = preg_replace("#\n|\t#",'',$XML);
+    //  Delete useless escpaces
+    $XML = preg_replace("# {2,}#",'',$XML);
+    // delete comments
+    $XML = preg_replace("#<\!--[a-z0-9-_.=/\\\*\+ ]+-->#i",'',$XML);
+    // Send CSS
+    return $XML;
   }
 
 
