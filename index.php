@@ -22,7 +22,12 @@ echo $BDD->insert([
     'keywords'=>'',
 ],'pages');
 
-print_r($BDD->query('SELECT title FROM pages'));
+echo $BDD->update(['title'=>'exemple n°4','url'=>'exemple2'],['url'=>'exemple']).'<br>';
+echo $BDD->delete(['url'=>'exemple']).'<br>';
+
+print_r($BDD->query('SELECT url,title FROM pages'));
+
+
 
 
 echo '</pre><br>/pre';
