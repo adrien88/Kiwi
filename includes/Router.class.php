@@ -53,7 +53,7 @@ class Router {
             }
 
             //
-            $keyargs = array_shift($struct);
+            $keyargs = array_pop($struct);
             foreach ($struct as $elem){
                 $out[$elem] = array_shift($parts);
             }
