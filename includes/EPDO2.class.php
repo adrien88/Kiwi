@@ -66,6 +66,31 @@ class EPDO2 {
 
 
     /** __________________________________________________________________________________
+    * add a col
+    * @param col_name:string,col_type:string,col_size:int
+    * @return success:error:bool
+    */
+    public addCol(...$params){
+        if (
+            isset($params['name']) &&
+            isset($params['type']) &&
+            isset($params['size'])
+        ) {
+            $req = 'ALTER TABLE '.self::getTable($table).' ADD COLUMN '.self::$PDO->quote($params['name']).' '.
+            strtoupper($params['type']).'('.$params['size'].');';
+            $stat = self::$PDO>query($req);
+            if(($error = $stat->errorInfo()[2]) && $error != null) {
+                return $error;
+            }
+            else {
+                return true;
+            }
+        }
+    }
+
+
+
+    /** __________________________________________________________________________________
     * Associate to a table
     * @param tablename:string
     * @return tablename:string
