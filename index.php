@@ -8,6 +8,8 @@ spl_autoload_register(function ($class) {
 });
 
 
+include 'unit_test/EPDO.php';
+
 // Config::save('test.ini',
 //     [
 //         'test'=>0,

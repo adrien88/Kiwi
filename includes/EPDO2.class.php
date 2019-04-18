@@ -19,8 +19,6 @@ class EPDO2 {
     // get table name
     private static $tableRegex = '';
 
-
-
     /** __________________________________________________________________________________
     * Construct :
     * @param void
@@ -31,8 +29,6 @@ class EPDO2 {
     public function __construct($params = null){
         self::connectDB();
     }
-
-
 
     /** __________________________________________________________________________________
     * Create instance to static using
@@ -63,33 +59,6 @@ class EPDO2 {
         }
     }
 
-
-
-    /** __________________________________________________________________________________
-    * add a col
-    * @param col_name:string,col_type:string,col_size:int
-    * @return success:error:bool
-    */
-    public addCol(...$params){
-        if (
-            isset($params['name']) &&
-            isset($params['type']) &&
-            isset($params['size'])
-        ) {
-            $req = 'ALTER TABLE '.self::getTable($table).' ADD COLUMN '.self::$PDO->quote($params['name']).' '.
-            strtoupper($params['type']).'('.$params['size'].');';
-            $stat = self::$PDO>query($req);
-            if(($error = $stat->errorInfo()[2]) && $error != null) {
-                return $error;
-            }
-            else {
-                return true;
-            }
-        }
-    }
-
-
-
     /** __________________________________________________________________________________
     * Associate to a table
     * @param tablename:string
@@ -103,32 +72,6 @@ class EPDO2 {
         }
         return self::$tablename;
     }
-
-
-
-    /** __________________________________________________________________________________
-    * Associate to a table
-    * @param tablename:string
-    * @return succes:table_structure:array
-    * COLUMN_NAME,COLLATION_NAME,COLUMN_TYPE,COLUMN_KEY
-    */
-    public static function getStruct($table = null)
-    {
-        $req = 'SELECT COLUMN_NAME,COLLATION_NAME,COLUMN_TYPE,COLUMN_KEY FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = \''.self::getTable($table).'\'
-        ORDER BY ORDINAL_POSITION;';
-        $stat = self::$PDO->query($req);
-        $out = [];
-        $i = 0;
-        foreach($stat->fetchAll() as $col){
-            if(!is_float($i/2)){
-                $out[] = $col;
-            }
-            $i++;
-        }
-        return $out;
-    }
-
 
 
     /** __________________________________________________________________________________
@@ -157,23 +100,6 @@ class EPDO2 {
             }
         }
     }
-
-
-
-    /** __________________________________________________________________________________
-    * Insert data into table
-    * @param :
-    * @return success:array
-    * @return error:(string)errormessage
-    *
-    */
-    final public static function select($what='*',$where=null,$like=null,$orderby=null) {
-        $what = is_array($what) ? implode(',', $what) : $what;
-        if(isset($where)){
-
-        }
-    }
-
 
 
     /** __________________________________________________________________________________
@@ -215,7 +141,6 @@ class EPDO2 {
     final static public function update(array $data = [], array $cond = [],$table = null) {
 
         $sdata = [];
-
         // write request
         $req = 'UPDATE '.self::getTable($table).' SET ';
         foreach ($data as $key => $value) {
