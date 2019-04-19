@@ -88,14 +88,17 @@ class EPDO2 {
             ($error = $stat->errorInfo()[2])
             && !empty($error)
         ){
+            unset($stat);
             return $error;
         }
         else {
             if (!is_bool($stat)){
                 $data = $stat->fetchAll($FETCH);
+                unset($stat);
                 return isset($data[1]) ? $data : $data[0];
             }
             else{
+                unset($stat);
                 return false;
             }
         }
@@ -115,7 +118,7 @@ class EPDO2 {
         $prepval = ':'.implode(',:',array_keys($data));
 
         // Sand
-        $req = "INSERT INTO ".self::getTable($table)." ($prepreq) VALUES ($prepval)";
+        $req = "INSERT INTO ".self::getTable($table)." ($prepreq) VALUES ($prepval);";
         $stat = self::$PDO->prepare($req);
         $stat->execute($data);
         if(
@@ -153,8 +156,6 @@ class EPDO2 {
             $req .= ''.$key.' = '.self::$PDO->quote($value).' AND ';
         }
         $req = substr($req,0,-4).';';
-
-        echo $req.'<br>';
 
         // Sand
         $stat = self::$PDO->prepare($req);
