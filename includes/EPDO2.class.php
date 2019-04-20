@@ -150,7 +150,7 @@ class EPDO2 {
 
 
     /** __________________________________________________________________________________
-    *   Insert data into table
+    *   Update data into table
     *   @param : string tablename; array : data []
     *   @return success:true
     *   @return error:(string)errormessage
@@ -188,9 +188,9 @@ class EPDO2 {
 
 
     /** __________________________________________________________________________________
-    *   Insert data into table
+    *   Delete data from table
     *   @param : string tablename; array : data []
-    *   @return success:array
+    *   @return success:bool
     *   @return error:(string)errormessage
     *
     */
