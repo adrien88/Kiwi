@@ -74,7 +74,7 @@ class EPDO2 {
     }
 
     /** __________________________________________________________________________________
-    *   query data into table
+    *   query a psecific patter data into table
     *   @param : string query
     *   @return success:array
     *   @return error:false:throw:error_message
