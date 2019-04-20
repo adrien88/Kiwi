@@ -20,10 +20,10 @@ class EPDO2 {
     private static $tableRegex = '';
 
     /** __________________________________________________________________________________
-    * Construct :
-    * @param void
-    * @return success:object:EPDO
-    * @return error:false
+    *   Construct :
+    *   @param void
+    *   @return success:object:EPDO
+    *   @return error:false
     *
     */
     public function __construct($params = null){
@@ -31,9 +31,9 @@ class EPDO2 {
     }
 
     /** __________________________________________________________________________________
-    * Create instance to static using
-    * @param void
-    * @return void
+    *   Create instance to static using
+    *   @param void
+    *   @return void
     */
     final public static function connectDB()
     {
@@ -60,9 +60,9 @@ class EPDO2 {
     }
 
     /** __________________________________________________________________________________
-    * Associate to a table
-    * @param tablename:string
-    * @return tablename:string
+    *   Associate to a table
+    *   @param tablename:string
+    *   @return tablename:string
     *
     */
     public static function getTable($tablename = null)
@@ -73,17 +73,31 @@ class EPDO2 {
         return self::$tablename;
     }
 
+    /** __________________________________________________________________________________
+    *   query data into table
+    *   @param : string query
+    *   @return success:array
+    *   @return error:false:throw:error_message
+    */
+    final public static search(array $pattern, $cols = '*') {
+        $str = '';
+        foreach($pattern as $colname => $patt){
+            $str .= $colname.' LIKE '.$patt.' AND';
+        }
+        $req = 'SELECT '.$cols.' WHERE '.$str.';';
+        return self::query($req);
+    }
+
 
     /** __________________________________________________________________________________
-    * query data into table
-    * @param : string query
-    * @return success:array
-    * @return error:false:throw:error_message
+    *   query data into table
+    *   @param : string query
+    *   @return success:array
+    *   @return error:false:throw:error_message
     *
     */
     final public static function query($req, $FETCH = null) {
         $stat = self::$PDO->query($req);
-
         if(
             ($error = $stat->errorInfo()[2])
             && !empty($error)
@@ -105,11 +119,12 @@ class EPDO2 {
     }
 
 
+
     /** __________________________________________________________________________________
-    * Insert data into table
-    * @param : string tablename; array : data []
-    * @return success:true
-    * @return error:(string)errormessage
+    *   Insert data into table
+    *   @param : string tablename; array : data []
+    *   @return success:true
+    *   @return error:(string)errormessage
     *
     */
     final public static function insert(array $data,$table = null) {
@@ -135,10 +150,10 @@ class EPDO2 {
 
 
     /** __________________________________________________________________________________
-    * Insert data into table
-    * @param : string tablename; array : data []
-    * @return success:true
-    * @return error:(string)errormessage
+    *   Insert data into table
+    *   @param : string tablename; array : data []
+    *   @return success:true
+    *   @return error:(string)errormessage
     *
     */
     final static public function update(array $data = [], array $cond = [],$table = null) {
@@ -172,12 +187,11 @@ class EPDO2 {
     }
 
 
-
     /** __________________________________________________________________________________
-    * Insert data into table
-    * @param : string tablename; array : data []
-    * @return success:array
-    * @return error:(string)errormessage
+    *   Insert data into table
+    *   @param : string tablename; array : data []
+    *   @return success:array
+    *   @return error:(string)errormessage
     *
     */
     final public static function delete(array $cond,$table = null) {
@@ -198,6 +212,8 @@ class EPDO2 {
             return true;
         }
     }
+
+
 
 
 }
