@@ -65,7 +65,7 @@ class EPDO2 {
     *   @return tablename:string
     *
     */
-    public static function getTable($tablename = null)
+    final public static function getTable($tablename = null)
     {
         if(isset($tablename)){
             self::$tablename = $tablename;
@@ -79,7 +79,7 @@ class EPDO2 {
     *   @return success:array
     *   @return error:false:throw:error_message
     */
-    final public static search(array $pattern, $cols = '*') {
+    final public static function search(array $pattern, $cols = '*') {
         $str = '';
         foreach($pattern as $colname => $patt){
             $str .= $colname.' LIKE '.$patt.' AND';
