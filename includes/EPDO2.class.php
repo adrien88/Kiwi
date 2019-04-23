@@ -94,7 +94,6 @@ class EPDO2 {
 
     //
 
-
     /** __________________________________________________________________________________
     *   test if table exists
     *   @param : tablename
@@ -121,7 +120,8 @@ class EPDO2 {
     *
     */
     final public static function query($req, $FETCH = null) {
-        $stat = self::$PDO->query($req);
+        $stat = self::$PDO->prepare($req);
+        $stat->execute();
         if(
             ($error = $stat->errorInfo()[2])
             && !empty($error)
@@ -133,7 +133,15 @@ class EPDO2 {
             if (!is_bool($stat)){
                 $data = $stat->fetchAll($FETCH);
                 unset($stat);
-                return isset($data[1]) ? $data : $data[0];
+                if(!empty($data)){
+                    if(count($data) > 1 ){
+                        return $data;
+                    }
+                    else {
+                        return $data[0];
+                    }
+                }
+                // return isset($data[1]) ? $data : $data[0];
             }
             else{
                 unset($stat);
