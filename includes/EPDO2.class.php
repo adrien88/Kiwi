@@ -10,10 +10,13 @@ class EPDO2 {
     // PDO instance
     private static $PDO = null;
 
+    // basename
+    private static $basename = '';
+
     // table locking
     private static $tablename = '';
 
-    // get table name
+    // get table elements
     private static $tableStruct = '';
 
     // get table name
@@ -86,6 +89,27 @@ class EPDO2 {
         }
         $req = 'SELECT '.$cols.' WHERE '.$str.';';
         return self::query($req);
+    }
+
+
+    //
+
+
+    /** __________________________________________________________________________________
+    *   test if table exists
+    *   @param : tablename
+    *   @return success:true
+    *   @return error:false
+    */
+    final public static function ifTableExists($tablename) {
+        $req = "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='$basename';";
+        $list = $this->query($req);
+        if(in_array($tablename,$list)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 
