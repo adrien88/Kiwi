@@ -54,7 +54,7 @@ class Config {
     * @param string:filename;array:config
     * @return array:bool(false)
     */
-    public static function load($filename)
+    final public static function load($filename)
     {
         return parse_ini_file($filename,1);
     }
@@ -66,7 +66,7 @@ class Config {
     * @return bool
     */
 
-    public static function save($filename,array $array = [])
+    final public static function save($filename,array $array = [])
     {
         /**
         * Recursive function to stringify array
@@ -120,7 +120,6 @@ class Config {
             }
             return $str;
         }
-
         // config ini file file filled with ini variables
         return file_put_contents( $filename, following($array,0));
     }
