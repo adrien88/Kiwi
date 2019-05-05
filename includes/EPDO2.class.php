@@ -95,16 +95,26 @@ class EPDO2 {
 
 
     /** __________________________________________________________________________________
+    *   get table list
+    *   @param : tablename
+    *   @return success:array (basic array list of tables names)
+    *   @return  error:false
+    */
+    final public static function tableList() {
+        $dbname = self::$dbname;
+        $req = "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$dbname."';";
+        $list = self::$PDO->query($req);
+        return $list->fetchAll();
+    }
+
+    /** __________________________________________________________________________________
     *   test if table exists
     *   @param : tablename
     *   @return success:true
     *   @return error:false
     */
     final public static function ifTableExists($tablename) {
-        $dbname = self::$dbname;
-        $req = "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$dbname."';";
-        $list = self::$PDO->query($req);
-        $list = $list->fetchAll();
+        $list = self::tableList();
         if(is_array($list) && in_array($tablename,$list[0])){
             return true;
         }
