@@ -7,7 +7,7 @@ class cache {
   public function __construct(
     $FILENAME,
     array $OPTS=array(
-      'DIR'=>'views/cache/',
+      'DIR'=>'view/cache/',
       'TIMEOUT'=>3600
     )
   ){
