@@ -11,7 +11,7 @@ class EPDO2 {
     private static $PDO = null;
 
     // basename
-    private static $basename = '';
+    private static $dbname = '';
 
     // table locking
     private static $tablename = '';
@@ -53,6 +53,8 @@ class EPDO2 {
                 ];
                 // instnce PDO in static var
                 self::$PDO = new PDO ($req,$DB['login'],$DB['passwd'],$options);
+                self::$dbname = $DB['name'];
+
                 unset($DB);
             }
             catch (PDOException $e){
@@ -92,8 +94,6 @@ class EPDO2 {
     }
 
 
-    //
-
     /** __________________________________________________________________________________
     *   test if table exists
     *   @param : tablename
@@ -101,9 +101,11 @@ class EPDO2 {
     *   @return error:false
     */
     final public static function ifTableExists($tablename) {
-        $req = "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='$basename';";
-        $list = $this->query($req);
-        if(in_array($tablename,$list)){
+        $dbname = self::$dbname;
+        $req = "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$dbname."';";
+        $list = self::$PDO->query($req);
+        $list = $list->fetchAll();
+        if(is_array($list) && in_array($tablename,$list[0])){
             return true;
         }
         else {
@@ -111,6 +113,17 @@ class EPDO2 {
         }
     }
 
+    /** __________________________________________________________________________________
+    *   get table structure
+    *   @param : colunms name
+    *   @return success:array
+    *   @return error:false
+    */
+    final public static function getStruct() {
+        $req = "SHOW COLUMNS FROM ".self::getTable();
+        $list = self::$PDO->query($req);
+        return $list->fetchAll();
+    }
 
     /** __________________________________________________________________________________
     *   query data into table
@@ -141,7 +154,6 @@ class EPDO2 {
                         return $data[0];
                     }
                 }
-                // return isset($data[1]) ? $data : $data[0];
             }
             else{
                 unset($stat);
@@ -178,8 +190,6 @@ class EPDO2 {
             return true;
         }
     }
-
-
 
     /** __________________________________________________________________________________
     *   Update data into table
