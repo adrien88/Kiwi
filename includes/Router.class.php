@@ -8,14 +8,24 @@
 */
 class Router {
 
-    public static function auto()
+    public static function auto($defaultPath)
     {
         // get route
-        $URL = self::coreGetRoute(['module','function','args']);
+        if (
+            ($URL = self::coreGetRoute(['module','function','args'])) === false
+        ){
+            header('location:'.$defaultPath);
+            exit;
+        }
+
+        // get alias and include controler (or other content)
         $alias = RouterManager::get($URL['module']);
 
         if (file_exists('controler/'.$alias)) {
             include 'controler/'.$alias;
+        }
+        elseif(file_exists('view/cache/'.$alias)) {
+            include 'view/cache/'.$alias;
         }
     }
 
@@ -46,22 +56,19 @@ class Router {
             $parts=explode('/',$out['path']);
 
             // create docroot ressource
-            // to create an HTML back link easier
+            // to create HTML backs links easier
             $out['docRoot']='./';
             for ($i=1; $i <= count($parts); $i++) {
                 $out['docRoot'].='../';
             }
 
-            //
+            // organise args
             $keyargs = array_pop($struct);
             foreach ($struct as $elem){
                 $out[$elem] = array_shift($parts);
             }
             $out[$keyargs]=$parts;
-            // $out['page']=str_replace('_','.',array_shift($parts));
-            // $out['obj']=array_shift($parts);
-            // $out=array_merge($out,$parts);
-            // RouterManager::get($url);
+
             return $out;
         }
         return false;
@@ -89,7 +96,7 @@ class RouterManager {
 
     /**
     * Set
-    * @param : array [ url => '', name => '', => 'alias' ]
+    * @param : array [ url => 'alias' ]
     * @return : bool
     */
     final public static function set($url,$alias)
