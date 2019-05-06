@@ -6,19 +6,21 @@
 
     echo "pages exists ? bool : >>> ".$BDD->ifTableExists('pages');
 
-    $rand = rand(1000,9999);
-    if ($BDD->insert([
-        'id_owner'=>1,
-        'url'=>'exemple n'.$rand,
-        'title'=>'exemple n°'.$rand
-    ])){
-        echo '<br><b>Insert success.</b><br>';
-    }
+    $BDD->getTable('pages');
+
+    // $rand = rand(1000,9999);
+    // if ($BDD->insert([
+    //     'id_owner'=>1,
+    //     'url'=>'exemple n'.$rand,
+    //     'title'=>'exemple n°'.$rand
+    // ])){
+    //     echo '<br><b>Insert success.</b><br>';
+    // }
 
     echo '<br><b>Content by url and title :<b> ';
     print_r($BDD->query('SELECT url,title FROM pages'));
 
-
+    print_r($BDD->getStruct('url'));
 
 
 

@@ -129,11 +129,43 @@ class EPDO2 {
     *   @return success:array
     *   @return error:false
     */
-    final public static function getStruct() {
+    final public static function getStruct($fieldname = null) {
         $req = "SHOW COLUMNS FROM ".self::getTable();
         $list = self::$PDO->query($req);
-        return $list->fetchAll();
+        if (!is_bool($list)) {
+            $data = $list->fetchAll();
+            unset($list);
+
+            foreach($data as $colnum => $colData) {
+                $data[$colnum]['Lenght'] = preg_replace('#.*\(([0-9]+)\)$#','$1',$colData['Type']);
+                $data[$colnum]['Type'] = preg_replace('#(.*)\([0-9]+\)$#','$1',$colData['Type']);
+
+                if (isset($fieldname)) {
+                    if ($colData['Field'] == $fieldname) {
+                        return $data[$colnum];
+                    }
+                }
+            }
+            return $data;
+        } else {
+            return false;
+        }
     }
+
+
+    /** __________________________________________________________________________________
+    *   DATA manipulation methods
+    *
+    *   query ( request(string), [Fetch_Method_Const] ) : mixed
+    *
+    *   insert( data(array), [tablename(string)] ) : bool
+    *
+    *   update( data(array), condition(array), [tablename(string)] ) : bool
+    *
+    *   delete( condition(array), [tablename(string)] ) : bool
+    *
+    */
+
 
     /** __________________________________________________________________________________
     *   query data into table
@@ -171,7 +203,6 @@ class EPDO2 {
             }
         }
     }
-
 
 
     /** __________________________________________________________________________________
