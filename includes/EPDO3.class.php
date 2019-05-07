@@ -7,17 +7,28 @@
  */
 class EPDO3 {
 
-    // PDO instance
-    private $PDO = [];
+    // PDO instances
+    private static $PDO = [];
 
-    // basename locking
+    // current DB name
     private $dbname = '';
 
-    // table locking
+    // Tables
+    private $TABLES = [
+        'META' => [
+            'STRUCTURE' => [],
+            'DATA' => [],
+        ]
+    ];
+
+    // current table name
     private $tablename = '';
 
-    // get table elements
+    // current table structure
     private $tableStruct = '';
+
+    // current table data
+    private $tabledata = null;
 
 
     /** __________________________________________________________________________________
@@ -25,23 +36,22 @@ class EPDO3 {
     *   @param void
     *   @return success:object:EPDO
     *   @return error:false
-    *
     */
     public function __construct($params = null){
-        $this->connectDB($params);
+        if(isset($params)){
+            $this->connectDB($params);
+        }
     }
 
     /** __________________________________________________________________________________
-    *   Create instance to static using
-    *   @param void
+    *   Create instance in static PDO
+    *
+    *   @param array:['name','host','login','passwd','charset']
     *   @return void
     */
-    final public function connectDB($params = null)
+    final public function connectDB($DB)
     {
-        // Load congig
-        $DB = $params ?? Config::load('config.ini')['database'];
-
-        if (!isset($this->PDO[$DB['name']])) {
+        if (!isset(self::$PDO[$DB['name']])) {
 
             // Init DB connect
             try {
@@ -50,38 +60,60 @@ class EPDO3 {
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES ".$DB['charset']
                 ];
-                // instnce PDO in static var
-                $this->PDO[$DB['name']] = new PDO ($req,$DB['login'],$DB['passwd'],$options);
+                // instnce PDO in var
+                self::$PDO[$DB['name']] = new PDO ($req,$DB['login'],$DB['passwd'],$options);
                 $this->dbname = $DB['name'];
 
+                // unset connecting params
                 unset($DB);
             }
             catch (PDOException $e){
                 // print error
-                exit('Database connection error : '.$e);
+                print('Database connection error : '.$e);
             }
         }
     }
 
     /** __________________________________________________________________________________
-    *   Associate a database
-    *   @param database:string
-    *   @return database:string
+    *   select a database name
+    *   @param database_name:string
+    *   @return database_name:string
     */
-    final public function getDB($database = null)
+    final public function getDBname($database = null)
     {
-        if(isset($this->PDO[$database])){
-            $this->database = $database;
+        if(isset(self::$PDO[$database])){
+            $this->dbname = $database;
         }
-        return $this->PDO[$database];
+        return $this->dbname;
     }
 
     /** __________________________________________________________________________________
-    *   Associate a table
-    *   @param tablename:string
-    *   @return tablename:string
+    *   select a database object (if selectable or selected)
+    *   @param database:string
+    *   @return success:database:object
+    *   @return error:false
     */
-    final public function getTable($tablename = null)
+    final public function getDB($database = null)
+    {
+        if(isset($database) && isset(self::$PDO[$database])){
+            $this->dbname = $database;
+            return self::$PDO[$database];
+        }
+        elseif (isset(self::$PDO[$this->dbname])) {
+            return self::$PDO[$this->dbname];
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    /** __________________________________________________________________________________
+    *   select a table name
+    *   @param table_name:string
+    *   @return table_name:string
+    */
+    final public function getTableName($tablename = null)
     {
         if(isset($tablename)){
             $this->tablename = $tablename;
@@ -90,19 +122,28 @@ class EPDO3 {
     }
 
     /** __________________________________________________________________________________
-    *   query a psecific patter data into table
-    *   @param : string query
-    *   @return success:array
-    *   @return error:false:throw:error_message
+    *   select a table object (if selectable or selected)
+    *   @param table_name:string
+    *   @return success:table:object
+    *   @return error:false
     */
-    // final public function search(array $pattern, $cols = '*') {
-    //     $str = '';
-    //     foreach($pattern as $colname => $patt){
-    //         $str .= $colname.' LIKE '.$patt.' AND';
-    //     }
-    //     $req = 'SELECT '.$cols.' WHERE '.$str.';';
-    //     return $this->query($req);
-    // }
+    final public function getTable($table = null)
+    {
+        if(isset($table) && isset($this->TABLE[$table])){
+            $this->tablename = $table;
+            return $this->TABLE[$table];
+        }
+        elseif (isset($this->TABLE[$this->tablename])) {
+            return $this->TABLE[$this->tablename];
+        }
+        else {
+            return false;
+        }
+    }
+
+
+
+
 
 
     /** __________________________________________________________________________________
@@ -140,8 +181,8 @@ class EPDO3 {
     *   @return success:array
     *   @return error:false
     */
-    final public static function getStruct($fieldname = null) {
-        $req = "SHOW COLUMNS FROM ".self::getTable();
+    final public function getStruct($fieldname = null) {
+        $req = "SHOW COLUMNS FROM ".$this->getTableName();
         $list = $this->getDB()->query($req);
         if (!is_bool($list)) {
             $data = $list->fetchAll();
@@ -185,7 +226,7 @@ class EPDO3 {
     *   @return error:false:throw:error_message
     *
     */
-    final public static function query($req, $FETCH = null) {
+    final public function query($req, $FETCH = null) {
         $stat = $this->getDB()->prepare($req);
         $stat->execute();
         if(
@@ -215,6 +256,23 @@ class EPDO3 {
         }
     }
 
+    /** __________________________________________________________________________________
+    *   query a psecific patter data into table
+    *   @param : string query
+    *   @return success:array
+    *   @return error:false:throw:error_message
+    */
+    final public function search(array $pattern, $cols = '*') {
+        $str = '';
+        foreach($pattern as $colname => $patt){
+            $str .= $colname.' LIKE '.$patt.' AND';
+        }
+        $req = 'SELECT '.$cols.' WHERE '.$str.';';
+        return $this->query($req);
+    }
+
+
+
 
     /** __________________________________________________________________________________
     *   Insert data into table
@@ -223,13 +281,13 @@ class EPDO3 {
     *   @return error:(string)errormessage
     *
     */
-    final public static function insert(array $data,$table = null) {
+    final public function insert(array $data,$table = null) {
         // formater la requête
         $prepreq = implode(',',array_keys($data));
         $prepval = ':'.implode(',:',array_keys($data));
 
         // Sand
-        $req = "INSERT INTO ".self::getTable($table)." ($prepreq) VALUES ($prepval);";
+        $req = "INSERT INTO ".$this->getTableName($table)." ($prepreq) VALUES ($prepval);";
         $stat = $this->getDB()->prepare($req);
         $stat->execute($data);
         if(
@@ -250,11 +308,11 @@ class EPDO3 {
     *   @return error:(string)errormessage
     *
     */
-    final static public function update(array $data = [], array $cond = [],$table = null) {
+    final public function update(array $data = [], array $cond = [],$table = null) {
 
         $sdata = [];
         // write request
-        $req = 'UPDATE '.self::getTable($table).' SET ';
+        $req = 'UPDATE '.$this->getTableName($table).' SET ';
         foreach ($data as $key => $value) {
             $req .= ''.$key.' = :'.$key.', ';
         }
@@ -288,8 +346,8 @@ class EPDO3 {
     *   @return error:(string)errormessage
     *
     */
-    final public static function delete(array $cond,$table = null) {
-        $req = 'DELETE FROM '.self::getTable($table).' WHERE ';
+    final public function delete(array $cond,$table = null) {
+        $req = 'DELETE FROM '.$this->getTableName($table).' WHERE ';
         foreach ($cond as $key => $value) {
             $req .= ''.$key.' = :'.$key.' AND ';
         }
