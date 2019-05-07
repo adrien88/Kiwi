@@ -24,8 +24,6 @@ class EPDO3 {
     // current table name
     private $tablename = '';
 
-
-
     /** __________________________________________________________________________________
     *   Construct :
     *   @param void
@@ -102,7 +100,6 @@ class EPDO3 {
         }
     }
 
-
     /** __________________________________________________________________________________
     *   select a table name
     *   @param table_name:string
@@ -135,6 +132,29 @@ class EPDO3 {
             return false;
         }
     }
+
+
+    /** __________________________________________________________________________________
+    *   select a table object (if selectable or selected)
+    *   @param table_name:string
+    *   @return success:table:object
+    *   @return error:false
+    */
+    // final public function flush($table = null)
+    // {
+    //     if (($table = $this->getTable($table)) !== false){
+    //         foreach($table['stack'] as $command){
+    //             $this->$command();
+    //         }
+    //     }
+    // }
+    //
+    // final public function addCommand($command,$name = null,$table = null)
+    // {
+    //     if (($table = $this->getTable($table)) !== false){
+    //         $table['stack'][$name] = $command;
+    //     }
+    // }
 
     /** __________________________________________________________________________________
     *   get table list
@@ -362,8 +382,5 @@ class EPDO3 {
             return true;
         }
     }
-
-
-
 
 }
