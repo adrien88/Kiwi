@@ -165,9 +165,14 @@ class EPDO3 {
     final public function tableList($dbname = null)
     {
         $dbname = $this->getDBname($dbname);
-        $req = "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$dbname."';";
+        $req = "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.TABLES
+            WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$dbname."';";
         $list = $this->getDB()->query($req);
-        return $list->fetchAll();
+        $tab = [];
+        foreach($list->fetchAll() as $col){
+            $tab[]=$col['TABLE_NAME'];
+        }
+        return $tab;
     }
 
     /** __________________________________________________________________________________
@@ -223,14 +228,36 @@ class EPDO3 {
     *
     *   query ( request(string), [Fetch_Method_Const] ) : mixed
     *
-    *   insert( data(array), [tablename(string)] ) : bool
+    *   insert ( data(array), [tablename(string)] ) : bool
     *
-    *   update( data(array), condition(array), [tablename(string)] ) : bool
+    *   update ( data(array), condition(array), [tablename(string)] ) : bool
     *
-    *   delete( condition(array), [tablename(string)] ) : bool
+    *   delete ( condition(array), [tablename(string)] ) : bool
     *
     */
 
+
+    /** __________________________________________________________________________________
+    *   data checking
+    *   @param data:array,tablename:string
+    *   @return data:array
+    *
+    */
+    final public function checkData(array $data, $tablename = null)
+    {
+        // $this->getTableName($tablename);
+        $struct = $this->getStruct();
+
+        foreach ($struct as $col) {
+            if (!in_array($col['Field'], $data)) {
+                echo 'champs à ajouter  :'.$col['Field'].'<br>';
+            }
+        }
+        // $data = array_merge($struct,$data);
+
+        print_r($data);
+        return $data;
+    }
 
     /** __________________________________________________________________________________
     *   query data into table
