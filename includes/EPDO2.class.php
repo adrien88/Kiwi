@@ -29,7 +29,8 @@ class EPDO2 {
     *   @return error:false
     *
     */
-    public function __construct($params = null){
+    public function __construct($params = null)
+    {
         self::connectDB();
     }
 
@@ -84,7 +85,8 @@ class EPDO2 {
     *   @return success:array
     *   @return error:false:throw:error_message
     */
-    final public static function search(array $pattern, $cols = '*') {
+    final public static function search(array $pattern, $cols = '*')
+    {
         $str = '';
         foreach($pattern as $colname => $patt){
             $str .= $colname.' LIKE '.$patt.' AND';
@@ -100,7 +102,8 @@ class EPDO2 {
     *   @return success:array (basic array list of tables names)
     *   @return  error:false
     */
-    final public static function tableList() {
+    final public static function tableList()
+    {
         $dbname = self::$dbname;
         $req = "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$dbname."';";
         $list = self::$PDO->query($req);
@@ -113,7 +116,8 @@ class EPDO2 {
     *   @return success:true
     *   @return error:false
     */
-    final public static function ifTableExists($tablename) {
+    final public static function ifTableExists($tablename)
+    {
         $list = self::tableList();
         if(is_array($list) && in_array($tablename,$list[0])){
             return true;
@@ -129,7 +133,8 @@ class EPDO2 {
     *   @return success:array
     *   @return error:false
     */
-    final public static function getStruct($fieldname = null) {
+    final public static function getStruct($fieldname = null)
+    {
         $req = "SHOW COLUMNS FROM ".self::getTable();
         $list = self::$PDO->query($req);
         if (!is_bool($list)) {
@@ -174,7 +179,8 @@ class EPDO2 {
     *   @return error:false:throw:error_message
     *
     */
-    final public static function query($req, $FETCH = null) {
+    final public static function query($req, $FETCH = null)
+    {
         $stat = self::$PDO->prepare($req);
         $stat->execute();
         if(
@@ -212,7 +218,8 @@ class EPDO2 {
     *   @return error:(string)errormessage
     *
     */
-    final public static function insert(array $data,$table = null) {
+    final public static function insert(array $data,$table = null)
+    {
         // formater la requête
         $prepreq = implode(',',array_keys($data));
         $prepval = ':'.implode(',:',array_keys($data));
@@ -239,7 +246,8 @@ class EPDO2 {
     *   @return error:(string)errormessage
     *
     */
-    final static public function update(array $data = [], array $cond = [],$table = null) {
+    final static public function update(array $data = [], array $cond = [],$table = null)
+    {
 
         $sdata = [];
         // write request
@@ -277,7 +285,8 @@ class EPDO2 {
     *   @return error:(string)errormessage
     *
     */
-    final public static function delete(array $cond,$table = null) {
+    final public static function delete(array $cond,$table = null)
+    {
         $req = 'DELETE FROM '.self::getTable($table).' WHERE ';
         foreach ($cond as $key => $value) {
             $req .= ''.$key.' = :'.$key.' AND ';

@@ -37,7 +37,8 @@ class EPDO3 {
     *   @return success:object:EPDO
     *   @return error:false
     */
-    public function __construct($params = null){
+    public function __construct($params = null)
+    {
         if(isset($params)){
             $this->connectDB($params);
         }
@@ -45,7 +46,6 @@ class EPDO3 {
 
     /** __________________________________________________________________________________
     *   Create instance in static PDO
-    *
     *   @param array:['name','host','login','passwd','charset']
     *   @return void
     */
@@ -141,18 +141,14 @@ class EPDO3 {
         }
     }
 
-
-
-
-
-
     /** __________________________________________________________________________________
     *   get table list
     *   @param : tablename
     *   @return success:array (basic array list of tables names)
     *   @return  error:false
     */
-    final public function tableList() {
+    final public function tableList()
+    {
         $dbname = $this->dbname;
         $req = "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$dbname."';";
         $list = $this->getDB()->query($req);
@@ -165,7 +161,8 @@ class EPDO3 {
     *   @return success:true
     *   @return error:false
     */
-    final public function ifTableExists($tablename) {
+    final public function ifTableExists($tablename)
+    {
         $list = $this->tableList();
         if(is_array($list) && in_array($tablename,$list[0])){
             return true;
@@ -181,7 +178,8 @@ class EPDO3 {
     *   @return success:array
     *   @return error:false
     */
-    final public function getStruct($fieldname = null) {
+    final public function getStruct($fieldname = null)
+    {
         $req = "SHOW COLUMNS FROM ".$this->getTableName();
         $list = $this->getDB()->query($req);
         if (!is_bool($list)) {
@@ -226,7 +224,8 @@ class EPDO3 {
     *   @return error:false:throw:error_message
     *
     */
-    final public function query($req, $FETCH = null) {
+    final public function query($req, $FETCH = null)
+    {
         $stat = $this->getDB()->prepare($req);
         $stat->execute();
         if(
@@ -262,7 +261,8 @@ class EPDO3 {
     *   @return success:array
     *   @return error:false:throw:error_message
     */
-    final public function search(array $pattern, $cols = '*') {
+    final public function search(array $pattern, $cols = '*')
+    {
         $str = '';
         foreach($pattern as $colname => $patt){
             $str .= $colname.' LIKE '.$patt.' AND';
@@ -281,7 +281,8 @@ class EPDO3 {
     *   @return error:(string)errormessage
     *
     */
-    final public function insert(array $data,$table = null) {
+    final public function insert(array $data,$table = null)
+    {
         // formater la requête
         $prepreq = implode(',',array_keys($data));
         $prepval = ':'.implode(',:',array_keys($data));
@@ -308,7 +309,8 @@ class EPDO3 {
     *   @return error:(string)errormessage
     *
     */
-    final public function update(array $data = [], array $cond = [],$table = null) {
+    final public function update(array $data = [], array $cond = [],$table = null)
+    {
 
         $sdata = [];
         // write request
@@ -346,7 +348,8 @@ class EPDO3 {
     *   @return error:(string)errormessage
     *
     */
-    final public function delete(array $cond,$table = null) {
+    final public function delete(array $cond,$table = null)
+    {
         $req = 'DELETE FROM '.$this->getTableName($table).' WHERE ';
         foreach ($cond as $key => $value) {
             $req .= ''.$key.' = :'.$key.' AND ';
