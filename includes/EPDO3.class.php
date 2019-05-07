@@ -15,20 +15,15 @@ class EPDO3 {
 
     // Tables
     private $TABLES = [
-        'META' => [
-            'STRUCTURE' => [],
-            'DATA' => [],
+        'exemple'  => [
+            'stack' => [],
+            'errors' => [],
         ]
     ];
 
     // current table name
     private $tablename = '';
 
-    // current table structure
-    private $tableStruct = '';
-
-    // current table data
-    private $tabledata = null;
 
 
     /** __________________________________________________________________________________
@@ -147,9 +142,9 @@ class EPDO3 {
     *   @return success:array (basic array list of tables names)
     *   @return  error:false
     */
-    final public function tableList()
+    final public function tableList($dbname = null)
     {
-        $dbname = $this->dbname;
+        $dbname = $this->getDBname($dbname);
         $req = "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$dbname."';";
         $list = $this->getDB()->query($req);
         return $list->fetchAll();
