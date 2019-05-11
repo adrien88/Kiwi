@@ -19,7 +19,6 @@
     print_r('<br>table : <b>insert</b><br>');
 
     $DB = [ 'UID' => 1, 'url' => 'exemple', 'title' => 'exemple', 'description' => ''  ];
-    $DB = $BDD->checkData($DB);
     print_r($BDD->insert($DB));
 
     echo '</pre><br>';

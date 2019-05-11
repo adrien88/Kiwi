@@ -72,7 +72,7 @@ class EPDO3 {
     *   @param database_name:string
     *   @return database_name:string
     */
-    final public function getDBname($database = null)
+    final public function getDBname($database = null) : string
     {
         if(isset(self::$PDO[$database])){
             $this->dbname = $database;
@@ -101,11 +101,28 @@ class EPDO3 {
     }
 
     /** __________________________________________________________________________________
+    *   unconnectDB
+    *   @param database:string
+    *   @return bool
+    */
+    final public function unconnectDB($database = null) : bool
+    {
+        if (isset(self::$PDO[$database])) {
+            if ($this->dbname == $database){
+                $this->dbname = null;
+            }
+            self::$PDO[$database] = null;
+            return true;
+        }
+        return false;
+    }
+
+    /** __________________________________________________________________________________
     *   select a table name
     *   @param table_name:string
     *   @return table_name:string
     */
-    final public function getTableName($tablename = null)
+    final public function getTableName($tablename = null) : string
     {
         if(isset($tablename)){
             $this->tablename = $tablename;
@@ -243,14 +260,31 @@ class EPDO3 {
     *   @return data:array
     *
     */
-    final public function checkData(array $data, $tablename = null)
+    final public function checkData(array $data, array $escape = ['ID'], $tablename = null)
     {
+        print_r($data);
+
         // $this->getTableName($tablename);
         $struct = $this->getStruct();
 
         foreach ($struct as $col) {
-            if (!in_array($col['Field'], $data)) {
+            if (
+                !in_array($col['Field'],$escape) &&
+                !array_key_exists($col['Field'], $data)
+            ){
                 echo 'champs à ajouter  :'.$col['Field'].'<br>';
+                switch($col['Type']){
+                    case 'varchar';
+                    case 'text';
+                        $data[$col['Field']] = '';
+                    break;
+                    case 'timestamp';
+                        $data[$col['Field']] = null;
+                    break;
+                    default;
+                        $data[$col['Field']] = 0;
+                    break;
+                }
             }
         }
         // $data = array_merge($struct,$data);
@@ -302,6 +336,7 @@ class EPDO3 {
     *   @param : string query
     *   @return success:array
     *   @return error:false:throw:error_message
+    *
     */
     final public function search(array $pattern, $cols = '*')
     {
@@ -325,6 +360,9 @@ class EPDO3 {
     */
     final public function insert(array $data,$table = null)
     {
+
+        $data = $this->checkData($data);
+
         // formater la requête
         $prepreq = implode(',',array_keys($data));
         $prepval = ':'.implode(',:',array_keys($data));
