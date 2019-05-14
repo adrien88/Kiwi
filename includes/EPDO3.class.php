@@ -247,8 +247,9 @@ class EPDO3 {
     *   defaultRegex( void ) : void
     *       apply defaut regex to current table
     *
-    *   execRegex ( array data ) : bool
+    *   execRegex ( array data , allowSpec ) : bool
     *       execute regex on data by colname to current table
+    *       allowSpec : if true : allow using words listed in method
     *       return a bool : true if ALL VALUES matches, else, false.
     *
     *   setRegex ( array regex [colname]=>regex ) : bool
@@ -264,17 +265,24 @@ class EPDO3 {
     final public function defaultRegex()
     {
         $this->TABLES[$this->dbname]['regex'] = [
+            'login' => '#([a-z0-9-_.]){2,}#i',
             'email' => '#([a-z0-9-_.]{2,})@([a-z0-9-_.]{2,})\.([a-z0-9-_.]{2,})#i',
-            'login' => '#(([a-z0-9-]){2,} ?)+#i',
+            'passwd' => '#([0-9-_.*=+,:;!#$£€[](){}\'"])#i',
+            'lastname' => '#(([a-z-]){2,} ?)+#i',
+            'surname' => '#(([a-z-]){2,} ?)+#i',
             'phone' => '#(([0-9]){2,3}[/. -]{1}){3,}#i',
-            'ipv4'  => '#([0-9]{3}(-|\.){1}){3}(-|\.)[0-9]{3}#',
+            'ipv4'  => '#([0-9]{3}\.){1,}\.([0-9]{3})#',
         ]
     }
 
-    final public function execRegex(array $data = []) : bool
+    final public function execRegex(array $data = [],bool $allowSpec = null) : bool
     {
+        $forbbiden = '#select|insert|update|delete|truncate|drop#';
         foreach($this->TABLES[$this->tablename]['regex'] as $colname => $regex){
-            if(isset($data[$colname]) && !preg_match($regex,$data[$colname])){
+            if(
+                ( isset($data[$colname]) && !preg_match($regex,$data[$colname]) )
+                or ( !isset($allowSpec) && preg_match($forbbiden, $data[$colname])
+            ){
                 return false;
             }
         }
