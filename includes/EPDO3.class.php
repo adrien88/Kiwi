@@ -2,8 +2,6 @@
 
 /**
  *
- * Penser a basculer dbname dans le tableau table pour associer les tables aux bases
- *
  *  ePDO : extandedPDO
  *  To change config PDO : please, edit the config.ini file at root of website.
  *  Methods allow you to all basics functions
@@ -12,19 +10,28 @@ class EPDO3 {
 
     // PDO instances
     private static $PDO = [];
+    /**
+    * PDO [
+    *   dbname => [
+    *       dbo => PDO object
+    *       tableList => []
+    *       ]
+    *   ]
+    */
 
     // current DB name
     private $dbname = '';
 
-    // Tables
-    // private $TABLES = [
-    //     'exemple'  => [
-    //         'dbname' => '',
-    //         'regex' => [],
-    //         'stack' => [],
-    //         'errors' => [],
-    //     ]
-    // ];
+
+    // Current Table
+    private $TABLES = [];
+    /**
+    * TABLES [
+    *   tablename => [
+    *       struct => table Structure
+    *       regex => [ colname => regex ]
+    *   ]
+    */
 
     // current table name
     private $tablename = '';
@@ -134,7 +141,6 @@ class EPDO3 {
     *
     */
 
-
     /** __________________________________________________________________________________
     *   select a table name
     *   @param table_name:string
@@ -155,41 +161,19 @@ class EPDO3 {
     *   @return success:table:object
     *   @return error:false
     */
-    final public function getTable($table = null)
+
+    final public function getTable($table = null) : array
     {
-        if(isset($table) && isset($this->TABLE[$table])){
+        if (isset($table) && in_array($table, self::$PDO[$this->dbname]['tables'])) {
             $this->tablename = $table;
             return $this->TABLE[$table];
         }
         elseif (isset($this->TABLE[$this->tablename])) {
-            return $this->TABLE[$this->tablename];
+
         }
-        else {
-            return false;
-        }
+        return $this->TABLE[$this->tablename];
     }
 
-    /** __________________________________________________________________________________
-    *   select a table object (if selectable or selected)
-    *   @param table_name:string
-    *   @return success:table:object
-    *   @return error:false
-    */
-    // final public function flush($table = null)
-    // {
-    //     if (($table = $this->getTable($table)) !== false){
-    //         foreach($table['stack'] as $command){
-    //             $this->$command();
-    //         }
-    //     }
-    // }
-    //
-    // final public function addCommand($command,$name = null,$table = null)
-    // {
-    //     if (($table = $this->getTable($table)) !== false){
-    //         $table['stack'][$name] = $command;
-    //     }
-    // }
 
     /** __________________________________________________________________________________
     *   get table list
@@ -257,24 +241,64 @@ class EPDO3 {
         }
     }
 
+    /** __________________________________________________________________________________
+    *   Regex manipulation methods
+    *
+    *   defaultRegex( void ) : void
+    *       apply defaut regex to current table
+    *
+    *   execRegex ( array data ) : bool
+    *       execute regex on data by colname to current table
+    *       return a bool : true if ALL VALUES matches, else, false.
+    *
+    *   setRegex ( array regex [colname]=>regex ) : bool
+    *       create or update a regex
+    *
+    *   delRegex (array data [colname_1, colname_2, etc.]) : true
+    *       delete a regex
+    *
+    *   dropRegex ( void ) : true
+    *       delete all regex
+    */
+
+    final public function defaultRegex()
+    {
+        $this->TABLES[$this->dbname]['regex'] = [
+            'email' => '#([a-z0-9-_.]{2,})@([a-z0-9-_.]{2,})\.([a-z0-9-_.]{2,})#i',
+            'login' => '#(([a-z0-9-]){2,} ?)+#i',
+            'phone' => '#(([0-9]){2,3}[/. -]{1}){3,}#i',
+            'ipv4'  => '#([0-9]{3}(-|\.){1}){3}(-|\.)[0-9]{3}#',
+        ]
+    }
+
+    final public function execRegex(array $data = []) : bool
+    {
+        foreach($this->TABLES[$this->tablename]['regex'] as $colname => $regex){
+            if(isset($data[$colname]) && !preg_match($regex,$data[$colname])){
+                return false;
+            }
+        }
+        return true;
+    }
+
     final public function setRegex(array $regex = []) : bool
     {
         $current = $this->TABLES[$this->dbname]['regex'];
-        $this->TABLES[$this->dbname]['regex'] = array_merge($curent, $regex);
+        $this->TABLES[$this->tablename]['regex'] = array_merge($curent, $regex);
         return true;
     }
 
     final public function delRegex(array $regex = []) : bool
     {
         foreach($regex as $regexname){
-            unset($this->TABLES[$this->dbname]['regex'][$regexname]);
+            unset($this->TABLES[$this->tablename]['regex'][$regexname]);
         }
         return true;
     }
 
     final public function dropRegex() : bool
     {
-        $this->TABLES[$this->dbname]['regex']=[];
+        $this->TABLES[$this->tablename]['regex']=[];
         return true;
     }
 
@@ -294,10 +318,9 @@ class EPDO3 {
 
 
     /** __________________________________________________________________________________
-    *   data checking
+    *   data checking complete missing data.
     *   @param data:array,tablename:string
     *   @return data:array
-    *
     */
     final public function checkStruct(array $data, array $escape = ['ID'], $tablename = null)
     {
@@ -318,7 +341,7 @@ class EPDO3 {
                         $data[$col['Field']] = '';
                     break;
                     case 'timestamp';
-                        $data[$col['Field']] = null;
+                        $data[$col['Field']] = time();
                     break;
                     default;
                         $data[$col['Field']] = 0;
@@ -333,7 +356,7 @@ class EPDO3 {
     }
 
     /** __________________________________________________________________________________
-    *   query data into table
+    *   send query request into table
     *   @param : string query
     *   @return success:array
     *   @return error:false:throw:error_message
