@@ -275,13 +275,13 @@ class EPDO3 {
         ]
     }
 
-    final public function execRegex(array $data = [],bool $allowSpec = null) : bool
+    final public function execRegex(array $data = [],bool $allowSpec = false) : bool
     {
-        $forbbiden = '#select|insert|update|delete|truncate|drop#';
+        $forbbiden = '#select|insert|update|delete|truncate|drop#i';
         foreach($this->TABLES[$this->tablename]['regex'] as $colname => $regex){
             if(
                 ( isset($data[$colname]) && !preg_match($regex,$data[$colname]) )
-                or ( !isset($allowSpec) && preg_match($forbbiden, $data[$colname])
+                or ( $allowSpec === true && preg_match($forbbiden, $data[$colname]) )
             ){
                 return false;
             }
