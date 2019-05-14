@@ -272,7 +272,7 @@ class EPDO3 {
             'surname' => '#(([a-z-]){2,} ?)+#i',
             'phone' => '#(([0-9]){2,3}[/. -]{1}){3,}#i',
             'ipv4'  => '#([0-9]{3}\.){1,}\.([0-9]{3})#',
-        ]
+        ];
     }
 
     final public function execRegex(array $data = [],bool $allowSpec = false) : bool
