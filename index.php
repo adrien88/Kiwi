@@ -10,6 +10,14 @@ spl_autoload_register(function ($class) {
 include 'unit_test/EPDO.php';
 
 
+echo fx(5);
+
+function fx( int $x ) : int
+{
+    return $x*$x;
+}
+
+
 
 // Config::save('test.ini',
 //     [

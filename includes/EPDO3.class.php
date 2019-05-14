@@ -1,6 +1,9 @@
 <?php
 
 /**
+ *
+ * Penser a basculer dbname dans le tableau table pour associer les tables aux bases
+ *
  *  ePDO : extandedPDO
  *  To change config PDO : please, edit the config.ini file at root of website.
  *  Methods allow you to all basics functions
@@ -14,12 +17,14 @@ class EPDO3 {
     private $dbname = '';
 
     // Tables
-    private $TABLES = [
-        'exemple'  => [
-            'stack' => [],
-            'errors' => [],
-        ]
-    ];
+    // private $TABLES = [
+    //     'exemple'  => [
+    //         'dbname' => '',
+    //         'regex' => [],
+    //         'stack' => [],
+    //         'errors' => [],
+    //     ]
+    // ];
 
     // current table name
     private $tablename = '';
@@ -41,6 +46,7 @@ class EPDO3 {
     *   Create instance in static PDO
     *   @param array:['name','host','login','passwd','charset']
     *   @return void
+    *
     */
     final public function connectDB($DB)
     {
@@ -54,8 +60,9 @@ class EPDO3 {
                     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES ".$DB['charset']
                 ];
                 // instnce PDO in var
-                self::$PDO[$DB['name']] = new PDO ($req,$DB['login'],$DB['passwd'],$options);
+                self::$PDO[$DB['name']]['dbo'] = new PDO ($req,$DB['login'],$DB['passwd'],$options);
                 $this->dbname = $DB['name'];
+                self::$PDO[$DB['name']]['tables'] = $this->tableList();
 
                 // unset connecting params
                 unset($DB);
@@ -72,7 +79,7 @@ class EPDO3 {
     *   @param database_name:string
     *   @return database_name:string
     */
-    final public function getDBname($database = null) : string
+    final public function getDBname(string $database = null) : string
     {
         if(isset(self::$PDO[$database])){
             $this->dbname = $database;
@@ -86,14 +93,14 @@ class EPDO3 {
     *   @return success:database:object
     *   @return error:false
     */
-    final public function getDB($database = null)
+    final public function getDB(string $database = null)
     {
-        if(isset($database) && isset(self::$PDO[$database])){
+        if(isset($database) && isset(self::$PDO[$database]['dbo'])){
             $this->dbname = $database;
-            return self::$PDO[$database];
+            return self::$PDO[$database]['dbo'];
         }
-        elseif (isset(self::$PDO[$this->dbname])) {
-            return self::$PDO[$this->dbname];
+        elseif (isset(self::$PDO[$this->dbname]['dbo'])) {
+            return self::$PDO[$this->dbname]['dbo'];
         }
         else {
             return false;
@@ -118,6 +125,17 @@ class EPDO3 {
     }
 
     /** __________________________________________________________________________________
+    *   TABLE manipulation methods
+    *
+    *
+    *
+    *
+    *
+    *
+    */
+
+
+    /** __________________________________________________________________________________
     *   select a table name
     *   @param table_name:string
     *   @return table_name:string
@@ -126,6 +144,7 @@ class EPDO3 {
     {
         if(isset($tablename)){
             $this->tablename = $tablename;
+            $this->TABLES[$tablename] = '';
         }
         return $this->tablename;
     }
@@ -149,7 +168,6 @@ class EPDO3 {
             return false;
         }
     }
-
 
     /** __________________________________________________________________________________
     *   select a table object (if selectable or selected)
@@ -198,9 +216,9 @@ class EPDO3 {
     *   @return success:true
     *   @return error:false
     */
-    final public function ifTableExists($tablename)
+    final public function ifTableExists(string $tablename,string $dbname = null)
     {
-        $list = $this->tableList();
+        $list = self::$PDO[$DB['name']][$this->getDBname($dbname)]['tables'];
         if(is_array($list) && in_array($tablename,$list[0])){
             return true;
         }
@@ -239,6 +257,27 @@ class EPDO3 {
         }
     }
 
+    final public function setRegex(array $regex = []) : bool
+    {
+        $current = $this->TABLES[$this->dbname]['regex'];
+        $this->TABLES[$this->dbname]['regex'] = array_merge($curent, $regex);
+        return true;
+    }
+
+    final public function delRegex(array $regex = []) : bool
+    {
+        foreach($regex as $regexname){
+            unset($this->TABLES[$this->dbname]['regex'][$regexname]);
+        }
+        return true;
+    }
+
+    final public function dropRegex() : bool
+    {
+        $this->TABLES[$this->dbname]['regex']=[];
+        return true;
+    }
+
 
     /** __________________________________________________________________________________
     *   DATA manipulation methods
@@ -260,7 +299,7 @@ class EPDO3 {
     *   @return data:array
     *
     */
-    final public function checkData(array $data, array $escape = ['ID'], $tablename = null)
+    final public function checkStruct(array $data, array $escape = ['ID'], $tablename = null)
     {
         print_r($data);
 
@@ -298,7 +337,6 @@ class EPDO3 {
     *   @param : string query
     *   @return success:array
     *   @return error:false:throw:error_message
-    *
     */
     final public function query($req, $FETCH = null)
     {
@@ -361,7 +399,7 @@ class EPDO3 {
     final public function insert(array $data,$table = null)
     {
 
-        $data = $this->checkData($data);
+        $data = $this->checkStruct($data);
 
         // formater la requête
         $prepreq = implode(',',array_keys($data));
@@ -447,5 +485,4 @@ class EPDO3 {
             return true;
         }
     }
-
 }
