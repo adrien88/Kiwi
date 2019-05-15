@@ -250,7 +250,7 @@ class EPDO3 {
     *   execRegex ( array data , allowSpec ) : bool
     *       execute regex on data by colname to current table
     *       allowSpec : if true : allow using words listed in method
-    *       return a bool : true if ALL VALUES matches, else, false.
+    *       return array of results
     *
     *   setRegex ( array regex [colname]=>regex ) : bool
     *       create or update a regex
@@ -262,12 +262,17 @@ class EPDO3 {
     *       delete all regex
     */
 
-    final public function defaultRegex()
+    /** __________________________________________________________________________________
+    *   import default model regex
+    *   @param void
+    *   @return void
+    */
+    final public function defaultRegex() : void
     {
-        $this->TABLES[$this->dbname]['regex'] = [
+        $this->TABLES[$this->tablename]['regex'] = [
             'login' => '#([a-z0-9-_.]){2,}#i',
             'email' => '#([a-z0-9-_.]{2,})@([a-z0-9-_.]{2,})\.([a-z0-9-_.]{2,})#i',
-            'passwd' => '#([0-9-_.*=+,:;!#$£€[](){}\'"])#i',
+            'passwd' => '#([0-9a-z-_.*=+,:;!#$£€\[\]\(\){}\'"])#i',
             'lastname' => '#(([a-z-]){2,} ?)+#i',
             'surname' => '#(([a-z-]){2,} ?)+#i',
             'phone' => '#(([0-9]){2,3}[/. -]{1}){3,}#i',
@@ -275,20 +280,41 @@ class EPDO3 {
         ];
     }
 
+
+    /** __________________________________________________________________________________
+    *   apply regex on data and return array with [colname] => 1 or 0.
+    *   allowspecs : allowing specifics words.
+    *   @param array:data[colname]=>regex,bool:allowSpec
+    *   @return array[colname]=>bool.
+    */
     final public function execRegex(array $data = [],bool $allowSpec = false) : bool
     {
+        $test = [];
         $forbbiden = '#select|insert|update|delete|truncate|drop#i';
         foreach($this->TABLES[$this->tablename]['regex'] as $colname => $regex){
             if(
                 ( isset($data[$colname]) && !preg_match($regex,$data[$colname]) )
-                or ( $allowSpec === true && preg_match($forbbiden, $data[$colname]) )
+                or ( $allowSpec === false && preg_match($forbbiden, $data[$colname]) )
             ){
-                return false;
+                $test[$colname]=false;
+            } else {
+                $test[$colname]=true;
             }
         }
-        return true;
+        return $test;
     }
 
+    foreach($this->execRegex(['truc'=>'machin'],1) as $colname => $allowed){
+        if($allowed===true){
+
+        }
+    }
+
+    /** __________________________________________________________________________________
+    *   add or edit a regex rule
+    *   @param array[col_1=>'regex_1',etc]
+    *   @return true
+    */
     final public function setRegex(array $regex = []) : bool
     {
         $current = $this->TABLES[$this->dbname]['regex'];
@@ -296,6 +322,11 @@ class EPDO3 {
         return true;
     }
 
+    /** __________________________________________________________________________________
+    *   delete a regex rule
+    *   @param array[col_1,col_2,etc]
+    *   @return true
+    */
     final public function delRegex(array $regex = []) : bool
     {
         foreach($regex as $regexname){
@@ -304,6 +335,11 @@ class EPDO3 {
         return true;
     }
 
+    /** __________________________________________________________________________________
+    *   drop all regex
+    *   @param void
+    *   @return true
+    */
     final public function dropRegex() : bool
     {
         $this->TABLES[$this->tablename]['regex']=[];
