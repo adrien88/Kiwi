@@ -9,7 +9,10 @@ class htmlObj {
     private $props = [];
     private $content = [];
 
-    /**
+
+
+
+    /**  __________________________________________________________________________________
     *   To create a new HTML Tag !
     *   Tagname is resquired !
     *   You can use any attributes with array ['href' => 'truc.html',]
@@ -17,6 +20,7 @@ class htmlObj {
     *   @param tagname:string,tag_attributes:array,tag_content:array
     *   @return html_tag
     */
+
     public function __construct(string $tagname, array $props = [], array $content = [])
     {
         $standaLonetag = ['wbr','base','input','img','br','hr','link','meta'];
@@ -28,7 +32,7 @@ class htmlObj {
         $this->set_content($content);
     }
 
-    /**
+    /**  __________________________________________________________________________________
     *   Set attributes to tag
     *   @param tag_attributes:array
     *   @return void
@@ -38,7 +42,7 @@ class htmlObj {
         $this->props=array_merge($this->props,$data);
     }
 
-    /**
+    /** __________________________________________________________________________________
     *   Set contents to tag
     *   @param tag_content:array
     *   @return void
@@ -48,107 +52,9 @@ class htmlObj {
         $this->content=array_merge($this->content,$data);
     }
 
-    /**
-    *   Create HTML 5 Page with using optionnaly Bootstrap 4
-    *   @param opts:array,content:mixed
-    *   @return void
-    */
-    public static function html5(array $opts = null, $content=''){
 
-        // set head
-        $foot_javascript = [];
-        $head_content[] = new htmlObj('title',[],['content'=> $opts['title'] ?? 'New page' ]);
-        $head_content[] = new htmlObj('meta',[],['charset'=> $opts['charset'] ?? 'utf8' ]);
-
-        // Get bootsrap librairies 4
-        if(isset($opts['bootstrap'])) {
-            $head_content[] = new htmlObj('link',[
-                'rel'=>"stylesheet",
-                'href'=>"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css",
-                'integrity'=>"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm",
-                'crossorigin'=>"anonymous"
-            ],[]);
-            $foot_javascript[] = new htmlObj('script',[
-                'src'=>"https://code.jquery.com/jquery-3.2.1.slim.min.js",
-                'integrity'=>"sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN",
-                'crossorigin'=>"anonymous"
-            ],[]);
-            $foot_javascript[] = new htmlObj('script',[
-                'src'=>"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js",
-                'integrity'=>"sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q",
-                'crossorigin'=>"anonymous"
-            ],[]);
-            $foot_javascript[] = new htmlObj('script',[
-                'src'=>"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js",
-                'integrity'=>"sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl",
-                'crossorigin'=>"anonymous"
-            ],[]);
-        }
-
-        // Get CSS Files
-        if (isset($opts['css']) && is_array($opts['css'])){
-            foreach ($opts['css'] as $file) {
-                $head_content[] = new htmlObj('link',[
-                    'rel'=>'stylesheet',
-                    'type'=>'text/css',
-                    'href'=>$file],[]);
-            }
-        }
-
-        //  Get JS Files
-        if (isset($opts['js']) && is_array($opts['js'])){
-            foreach ($opts['js'] as $file) {
-                $foot_javascript[] = new htmlObj('script',[
-                    'type'=>'application/javascript',
-                    'src'=>$file],[]);
-            }
-        }
-
-        ## ASSEMBLY HTML HEAD
-        $head = new htmlObj('head',[],$head_content);
-
-        # ASSEMBLY AUTO HEADER
-        $header = null;
-        if(isset($opts['header'])) {
-            if(isset($opts['header']['title'])) {
-                $title = new htmlObj('h1',[],[$opts['header']['title']]);
-            }
-            if(isset($opts['header']['description'])) {
-                $desc = new htmlObj('p',[],[$opts['header']['description']]);
-            }
-            $header = new htmlObj('header',['class'=>'header'],[$title,$desc]);
-            unset($opts['header'],$title,$desc);
-        }
-
-        # ASSEMBLY AUTO FOOTER
-        $footer = null;
-        if(isset($opts['footer'])) {
-            if(isset($opts['footer']['title'])) {
-                $title = new htmlObj('h2',[],[$opts['footer']['title']]);
-            }
-            if(isset($opts['footer']['description'])) {
-                $desc = $opts['footer']['description'];
-            }
-            $br = new htmlObj('hr',[],[]);
-            $footer = new htmlObj('footer',['class'=>'footer'],[$br,$title,$desc]);
-            unset($opts['footer'],$title,$desc);
-        }
-
-
-        ## ASSEMBLY HTML BODY
-        $body = new htmlObj('body',[],[$header,$content,$footer,$foot_javascript]);
-        $html = new htmlObj(
-            'html',
-            ['lang'=> $opts['lang'] ?? 'en-EN','dir'=> $opts['dir'] ?? 'ltr'],
-            [$head,$body]
-        );
-
-        # return page object
-        return new htmlObj('!DOCTYPE html',[],[$html]);
-    }
-
-    /**
-    * Return HTML formated string from object data
+    /**  __________________________________________________________________________________
+    *   Return HTML formated string from object data
     *   @param void
     *   @return string
     */
@@ -162,7 +68,7 @@ class htmlObj {
             // concat html properties
             if(is_int($key)){
                 $str.=' '.$value.' ';
-            } elseif ($key != 'content' ){
+            } else {
                 $str.=' '.$key.'="'.$value.'" ';
             }
         }
@@ -170,7 +76,7 @@ class htmlObj {
         // if tag content (one or any) other tag
         // recusive callbak on inner object or array containing
         if (isset($this->content) && !empty($this->content)){
-            $this->content = $this->recursive($this->content);
+            $this->content = $this->recursive([$this->content]);
         }
 
         // close the tag
@@ -188,14 +94,14 @@ class htmlObj {
             }
             // close double tag execpting Doctype
             if (!preg_match('#!DOCTYPE#i',$this->tagname)){
-                $str.='</'.$this->tagname.">";
+                $str.='</'.$this->tagname.">\n";
             }
         }
         // return html formated string
         return $str;
     }
 
-    /**
+    /**  __________________________________________________________________________________
     *   recursive function used in html() method previously defined
     */
     private static function recursive(array $datacontent) : string

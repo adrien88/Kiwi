@@ -17,11 +17,11 @@ class cache {
     $this->ELEM['DIR']=$DIR;
   }
 
-  public bind(array $PARAMS = []){
-    if(!empty($PARAMS)):
-      $this->ELEM=array_merge($this->ELEM,$PARAMS);
-    endif;
-  }
+  // public bind(array $PARAMS = []){
+  //   if(!empty($PARAMS)):
+  //     $this->ELEM=array_merge($this->ELEM,$PARAMS);
+  //   endif;
+  // }
 
   // load from data
   public function load(){

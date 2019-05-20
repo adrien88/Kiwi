@@ -1,16 +1,17 @@
 <?php
 
 /**
-* Router class
-* Use it outter instance like : Router::auto();
-* It's work by aliasing : /my/url will ve associated to a controler file OR a
+*   Router class
+*   Use it outter instance like : Router::auto();
+*   It's work by aliasing : /my/url will ve associated to a controler file OR a
 *
 */
 class Router {
 
-    public static function auto($defaultPath)
+    public static function auto(string $defaultPath) : void
     {
-        // get route
+        // get route function of structure
+        // if can't : redirect user to landing page
         if (
             ($URL = self::coreGetRoute(['module','function','args'])) === false
         ){
@@ -29,7 +30,7 @@ class Router {
         }
     }
 
-    /**
+    /** __________________________________________________________________________________
     * if isset $_GET
     * Return route array from $_GET[0]
     *
