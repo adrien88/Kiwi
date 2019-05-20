@@ -48,7 +48,13 @@ class htmlObj {
         $this->content=array_merge($this->content,$data);
     }
 
+    /**
+    *   Create HTML 5 Page with using optionnaly Bootstrap 4
+    *   @param opts:array,content:mixed
+    *   @return void
+    */
     public static function html5(array $opts = null, $content=''){
+
         // set head
         $foot_javascript = [];
         $head_content[] = new htmlObj('title',[],['content'=> $opts['title'] ?? 'New page' ]);
@@ -92,7 +98,7 @@ class htmlObj {
         //  Get JS Files
         if (isset($opts['js']) && is_array($opts['js'])){
             foreach ($opts['js'] as $file) {
-                $head_content[] = new htmlObj('script',[
+                $foot_javascript[] = new htmlObj('script',[
                     'type'=>'application/javascript',
                     'src'=>$file],[]);
             }
@@ -101,12 +107,39 @@ class htmlObj {
         ## ASSEMBLY HTML HEAD
         $head = new htmlObj('head',[],$head_content);
 
+        # ASSEMBLY AUTO HEADER
+        $header = null;
+        if(isset($opts['header'])) {
+            if(isset($opts['header']['title'])) {
+                $title = new htmlObj('h1',[],[$opts['header']['title']]);
+            }
+            if(isset($opts['header']['description'])) {
+                $desc = new htmlObj('p',[],[$opts['header']['description']]);
+            }
+            $header = new htmlObj('header',['class'=>'header'],[$title,$desc]);
+            unset($opts['header'],$title,$desc);
+        }
+
+        # ASSEMBLY AUTO FOOTER
+        $footer = null;
+        if(isset($opts['footer'])) {
+            if(isset($opts['footer']['title'])) {
+                $title = new htmlObj('h2',[],[$opts['footer']['title']]);
+            }
+            if(isset($opts['footer']['description'])) {
+                $desc = $opts['footer']['description'];
+            }
+            $br = new htmlObj('hr',[],[]);
+            $footer = new htmlObj('footer',['class'=>'footer'],[$br,$title,$desc]);
+            unset($opts['footer'],$title,$desc);
+        }
+
 
         ## ASSEMBLY HTML BODY
-        $body = new htmlObj('body',[],[$content,$foot_javascript]);
+        $body = new htmlObj('body',[],[$header,$content,$footer,$foot_javascript]);
         $html = new htmlObj(
             'html',
-            ['lang'=> $opt['lang'] ?? 'en-EN','dir'=> $opt['dir'] ?? 'ltr'],
+            ['lang'=> $opts['lang'] ?? 'en-EN','dir'=> $opts['dir'] ?? 'ltr'],
             [$head,$body]
         );
 
@@ -114,7 +147,11 @@ class htmlObj {
         return new htmlObj('!DOCTYPE html',[],[$html]);
     }
 
-
+    /**
+    * Return HTML formated string from object data
+    *   @param void
+    *   @return string
+    */
     public function html() : string
     {
         // open tag
@@ -133,25 +170,7 @@ class htmlObj {
         // if tag content (one or any) other tag
         // recusive callbak on inner object or array containing
         if (isset($this->content) && !empty($this->content)){
-            $content = '';
-            foreach($this->content as $obj){
-                if (is_object($obj)) {
-                    $content .= $obj->html();
-                }
-
-                // ??????????????????????????????????????????????????????????
-                // NB ça vaudrait le coup de faire une fonction récursive ?
-
-                elseif (is_array($obj)){
-                    foreach($obj as $subobj){
-                        $content .= $subobj->html();
-                    }
-                }
-                else {
-                    $content .= $obj;
-                }
-            }
-            $this->content = $content;
+            $this->content = $this->recursive($this->content);
         }
 
         // close the tag
@@ -174,6 +193,26 @@ class htmlObj {
         }
         // return html formated string
         return $str;
+    }
+
+    /**
+    *   recursive function used in html() method previously defined
+    */
+    private static function recursive(array $datacontent) : string
+    {
+        $content ='';
+        foreach($datacontent as $obj){
+            if (is_object($obj)) {
+                $content .= $obj->html();
+            }
+            elseif (is_array($obj)){
+                $content .= self::recursive($obj);
+            }
+            else {
+                $content .= $obj;
+            }
+        }
+        return $content;
     }
 
 }

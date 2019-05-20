@@ -8,23 +8,27 @@ spl_autoload_register(function ($class) {
 });
 // include 'unit_test/EPDO.php';
 
-// Definir une entête
-$header = new htmlObj('header',[],[
-        new htmlObj('h1',[],['The Warrior ! ']),
-        new htmlObj('p',[],['Coucou les gens']),
-    ]);
-
 // Definir un contenu
 $article = new htmlObj('article',[],[
             'Voici mon super article.<br> Please : visit my site : ',
             new htmlObj('a', ['href'=>'https://boilley.info'], ['boilley.info']),
         ]);
+
+// Definir un footer personalisée
+$footer = new htmlObj('footer',['id'=>'footer'],[
+            new htmlObj('h2', [], ['Boilley Adrien © 2019 GPL V.3']),
+            new htmlObj('p', [], ['I\'m the best ']),
+        ]);
+
 // Creer une page par defaut
 $obj = htmlObj::html5([
+    'dir'=>'ltr', 'lang'=>'fr-FR','charset'=>'utf8','bootstrap'=>0,
     'title'=>'Warrior',
-    'charset'=>'utf8',
     'css'=>['test.css'],
+    'header'=>['title'=>'Warrior','description'=>'graaaaaa'],
+    'footer'=>['title'=>'Boilley Adrien © 2019 GPL V.3','description'=>'I\'m the best !']
     ],
-    [$header,$article]);
+    [$article,$footer]);
+
 // afficher la page
 echo $obj->html();
