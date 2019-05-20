@@ -61,7 +61,7 @@ class EPDO3 {
 
             // Init DB connect
             try {
-                $req = 'mysql:dbname='.$DB['name'].';host='.$DB['host'].';';
+                $req = $DB['type'].':dbname='.$DB['name'].';host='.$DB['host'].';';
                 $options = [
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES ".$DB['charset']
@@ -173,6 +173,9 @@ class EPDO3 {
         }
         return $this->TABLE[$this->tablename];
     }
+
+
+
 
 
     /** __________________________________________________________________________________
