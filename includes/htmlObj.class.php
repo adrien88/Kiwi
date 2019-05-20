@@ -48,10 +48,38 @@ class htmlObj {
         $this->content=array_merge($this->content,$data);
     }
 
-    public static function html5(array $opts = null,$content=''){
+    public static function html5(array $opts = null, $content=''){
         // set head
+        $foot_javascript = [];
         $head_content[] = new htmlObj('title',[],['content'=> $opts['title'] ?? 'New page' ]);
         $head_content[] = new htmlObj('meta',[],['charset'=> $opts['charset'] ?? 'utf8' ]);
+
+        // Get bootsrap librairies 4
+        if(isset($opts['bootstrap'])) {
+            $head_content[] = new htmlObj('link',[
+                'rel'=>"stylesheet",
+                'href'=>"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css",
+                'integrity'=>"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm",
+                'crossorigin'=>"anonymous"
+            ],[]);
+            $foot_javascript[] = new htmlObj('script',[
+                'src'=>"https://code.jquery.com/jquery-3.2.1.slim.min.js",
+                'integrity'=>"sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN",
+                'crossorigin'=>"anonymous"
+            ],[]);
+            $foot_javascript[] = new htmlObj('script',[
+                'src'=>"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js",
+                'integrity'=>"sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q",
+                'crossorigin'=>"anonymous"
+            ],[]);
+            $foot_javascript[] = new htmlObj('script',[
+                'src'=>"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js",
+                'integrity'=>"sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl",
+                'crossorigin'=>"anonymous"
+            ],[]);
+        }
+
+        // Get CSS Files
         if (isset($opts['css']) && is_array($opts['css'])){
             foreach ($opts['css'] as $file) {
                 $head_content[] = new htmlObj('link',[
@@ -60,6 +88,8 @@ class htmlObj {
                     'href'=>$file],[]);
             }
         }
+
+        //  Get JS Files
         if (isset($opts['js']) && is_array($opts['js'])){
             foreach ($opts['js'] as $file) {
                 $head_content[] = new htmlObj('script',[
@@ -67,16 +97,22 @@ class htmlObj {
                     'src'=>$file],[]);
             }
         }
+
+        ## ASSEMBLY HTML HEAD
         $head = new htmlObj('head',[],$head_content);
-        $body = new htmlObj('body',[],$content);
+
+
+        ## ASSEMBLY HTML BODY
+        $body = new htmlObj('body',[],[$content,$foot_javascript]);
         $html = new htmlObj(
             'html',
             ['lang'=> $opt['lang'] ?? 'en-EN','dir'=> $opt['dir'] ?? 'ltr'],
             [$head,$body]
         );
+
+        # return page object
         return new htmlObj('!DOCTYPE html',[],[$html]);
     }
-
 
 
     public function html() : string
@@ -101,6 +137,15 @@ class htmlObj {
             foreach($this->content as $obj){
                 if (is_object($obj)) {
                     $content .= $obj->html();
+                }
+
+                // ??????????????????????????????????????????????????????????
+                // NB ça vaudrait le coup de faire une fonction récursive ?
+
+                elseif (is_array($obj)){
+                    foreach($obj as $subobj){
+                        $content .= $subobj->html();
+                    }
                 }
                 else {
                     $content .= $obj;
