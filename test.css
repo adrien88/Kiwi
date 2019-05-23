@@ -1,11 +1,22 @@
 body  {
-    width:90%;
+    background-color:gray;
     margin:auto;
 }
+
+body header {
+    background-color:#ddd;
+}
+body main {
+    background-color:#fff;
+}
+
 body header p {
-    color:red;
+    color:#444;
 }
 
 body footer h2 {
+    text-align: center;
     font-size:1em;
+    background-color:black;
+    color:white;
 }

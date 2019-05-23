@@ -4,6 +4,8 @@ class pageBuilder {
 
 
     public $PAGE = [];
+    public $ft_script = [];
+    public $HTML5 = [];
     public $doctype = '';
 
     public function __construct(array $opts = []){
@@ -16,10 +18,13 @@ class pageBuilder {
     *   @return void
     */
     public function html5(array $opts = null, $content=''){
-
-        $this->doctype  = '<!DOCTYPE html>';
+        $this->doctype  = "<!DOCTYPE html>
+        <!--
+            \tBOILLEY Adrien © 2019 GPL
+            \tThis website was powered by Kiwi Framework
+            \tMore about kiwi at : https://github.com/adrien88/Kiwi
+        -->\n ";
         $head_content= [];
-        $foot_javascript = [];
 
         // set head element
         $head_content[] = new htmlObj('title',[],['content'=> $opts['title'] ?? 'New page' ]);
@@ -34,13 +39,13 @@ class pageBuilder {
             'rel'=>"stylesheet",
             'href'=>"views/bootstrap4/bootstrap.min.css",
         ],[]);
-        $foot_javascript[] = new htmlObj('script',[
+        $this->ft_script[] = new htmlObj('script',[
             'src'=>"views/bootstrap4/jquery-3.2.1.slim.min.js",
         ],[]);
-        $foot_javascript[] = new htmlObj('script',[
+        $this->ft_script[] = new htmlObj('script',[
             'src'=>"views/bootstrap4/popper.min.js",
         ],[]);
-        $foot_javascript[] = new htmlObj('script',[
+        $this->ft_script[] = new htmlObj('script',[
             'src'=>"views/bootstrap4/bootstrap.min.js",
         ],[]);
 
@@ -87,7 +92,7 @@ class pageBuilder {
         $head = new htmlObj('head',[],$head_content);
 
         ## ASSEMBLY HTML BODY
-        $body = new htmlObj('body',['id'=>'body'],$foot_javascript);
+        $body = new htmlObj('body',['id'=>'body'],[]);
 
         $this->PAGE = new htmlObj(
             'html',
@@ -95,25 +100,6 @@ class pageBuilder {
             [$head,$body]
         );
     }
-
-    // echo $PAGE->tagname; //html
-    // echo $PAGE->content[0]->tagname; //head
-    // echo $PAGE->content[1]->tagname; //body
-    // echo $PAGE->content[1]->content[0]->tagname; //header
-    // echo $PAGE->content[1]->content[1]->tagname; //main
-    // echo $PAGE->content[1]->content[2]->tagname; //footer
-    // echo $PAGE->content[1]->content[3]->tagname; //nav
-
-    public function addObject(array $content, bool $top = false)
-    {
-        $header = $this->elemBtBuilder(
-            ['archi' => self::getArchi(1,0),
-             'elemnts' => $content,
-            ]
-        );
-        $this->PAGE->content[1]->set_content([$header],$top);
-    }
-
 
     /**
     *   Choose the BootStrap structure
@@ -129,6 +115,7 @@ class pageBuilder {
         $a_struct[] = ['container',       'container',];            // [      (#(...)#)      ]
 
         //                                                             nbr cols
+        $a_cols[] = '';                                             // no col determined
         $a_cols[] = 'col-12';                                       // one column
         $a_cols[] = 'col-xs-12 col-sm-6';                           // two columns
         $a_cols[] = 'col-xs-12 col-sm-6 col-lg-4';                  // tree columns
@@ -146,28 +133,40 @@ class pageBuilder {
 
     /**
     * building with bootstrap
-    *
+    *   @param opts:array:[elemnts,archi]
     */
     public function elemBtBuilder(array $opts = [])
     {
-        if(isset($opts['archi'])){
+        if(isset($opts['archi']) && isset($opts['tagname'])){
             $stackDiv = [];
-            if(isset($opts)) {
+            if(isset($opts['elemnts'])) {
                 foreach($opts['elemnts'] as $obj){
-                    $stackDiv[] = new htmlObj('div',['class'=>$opts['archi'][2]],[$obj]);
+                    // if (!in_array('bt',$obj->class)){
+                    if (!empty($opts['archi'][2])) {
+                        $stackDiv[] = new htmlObj('div',['class'=>$opts['archi'][2]],[$obj]);
+                    } else {
+                        // unset($obj->class['bt']);
+                        $stackDiv[] = $obj;
+                    }
                 }
             }
             $inrow = new htmlObj('div',['class'=>'row'],$stackDiv);
             $indiv = new htmlObj('div',['class'=>$opts['archi'][1]],[$inrow]);
             $inrow = new htmlObj('div',['class'=>'row'],[$indiv]);
-            return new htmlObj('section',['class'=>$opts['archi'][0]],[$inrow]);
+            $this->PAGE->content[1]->set_content(
+                [new htmlObj($opts['tagname'],['class'=>$opts['archi'][0]],[$inrow])]
+            );
         }
     }
 
 
+    /**
+    *
+    */
     public function render() : string
     {
-        
+        // adding footer scripts
+        $this->PAGE->content[1]->set_content($this->ft_script);
         return $this->doctype.$this->PAGE->getHtml();
     }
 

@@ -53,13 +53,14 @@ class htmlObj {
     }
 
 
+
     /** __________________________________________________________________________________
     *   Set class to tag
     *   @param class:string
     */
-    public function set_class(string $class) : void
+    public function set_class(array $class = []) : void
     {
-        $this->class[]=$class;
+        $this->class = array_merge($this->class,$class);
     }
 
     /** __________________________________________________________________________________
@@ -89,12 +90,13 @@ class htmlObj {
     */
     public function getHtml() : string
     {
-        $standaLonetag = ['wbr','base','input','img','br','hr','link','meta'];
 
         // open tag
-        $str="\n<$this->tagname";
+        $str="<$this->tagname";
 
-        $str.=' '.implode('',$this->class).' ';
+        if (!empty($this->class)) {
+            $str.=' class="'.implode(' ',$this->class).'" ';
+        }
 
         // browse propoperties
         foreach($this->props as $key => $value){
@@ -114,20 +116,20 @@ class htmlObj {
         }
 
         // close the tag
+        $standaLonetag = ['wbr','base','input','img','br','hr','link','meta'];
         if(in_array($this->tagname,$standaLonetag)){
             if (isset($this->content) && !empty($this->content)){
-                $str.=' content="'.$this->content.'" />';
+                $str.=" content=\"$this->content\" />\n";
             } else {
                 $str.="/>\n";
             }
         }
         else {
-            $str.= '>';
+            $str.=" >\n";
             if (isset($this->content) && !empty($this->content)){
                 $str.=$this->content;
             }
-            // close double tag execpting Doctype{
-                $str.='</'.$this->tagname.">\n";
+            $str.="</$this->tagname>\n";
 
         }
         // return html formated string
