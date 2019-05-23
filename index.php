@@ -7,21 +7,27 @@ spl_autoload_register(function ($class) {
     include 'includes/' . $class . '.class.php';
 });
 
-
-// Definir un contenu
-$article = new htmlObj('article',[
-        'class'=>'container'
-    ],[
-        'Voici mon super article.<br> Please : visit my site : ',
-        new htmlObj('a', ['href'=>'https://boilley.info'], ['boilley.info']),
-    ]);
-
-
 // Creer une page par defaut
-$obj = pageBuilder::html5(['dir'=>'ltr', 'lang'=>'fr-FR','charset'=>'utf8','bootstrap'=>'container','title'=>'Warrior',
-'css'=>['test.css'],
-'header'=>['title'=>'Warrior','description'=>'graaaaaa'],
-'footer'=>['title'=>'Boilley Adrien © 2019 GPL V.3','description'=>'I\'m the best !']],[$article]);
+$obj = new pageBuilder();
+$obj -> html5(['dir'=>'ltr', 'lang'=>'fr-FR','charset'=>'utf8','title'=>'Warrior','css'=>['test.css']],'');
 
+// Add header
+$title = new htmlObj('h1',['id'=>'headerTitle'],['Boilley.info']);
+$Desc = new htmlObj('p',['id'=>'headerDesc'],['Bienvenue sur mon site.']);
+$obj -> addObject([$title,$Desc]);
+
+// Add main
+$title = new htmlObj('h2',['id'=>'title'],['Coucou les gens.']);
+$Desc = new htmlObj('p',['id'=>'content'],['Vous allez biens ?']);
+$obj -> addObject([$title,$Desc]);
+
+
+// echo '<pre>'.print_r($obj->PAGE,1).'</pre>';
+
+// echo $page ->html();
 // afficher la page
-echo $obj->html();
+echo $obj->render();
+
+
+
+// vendredi matin 9h CCH conseil habita 1C rue frenel

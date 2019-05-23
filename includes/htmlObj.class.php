@@ -3,13 +3,10 @@
 
 class htmlObj {
 
-    private static $html5;
-    private $tagname;
-    private $standalone = false;
-    private $props = [];
-    private $content = [];
-
-
+    public $tagname;
+    public $props = [];
+    public $class = [];
+    public $content = [];
 
 
     /**  __________________________________________________________________________________
@@ -23,10 +20,6 @@ class htmlObj {
 
     public function __construct(string $tagname, array $props = [], array $content = [])
     {
-        $standaLonetag = ['wbr','base','input','img','br','hr','link','meta'];
-        if (in_array($tagname,$standaLonetag)){
-            $this->standalone = true;
-        }
         $this->tagname = $tagname;
         $this->set_props($props);
         $this->set_content($content);
@@ -47,10 +40,46 @@ class htmlObj {
     *   @param tag_content:array
     *   @return void
     */
-    public function set_content(array $data = []) : void
+    public function set_content(array $groupdata = [], bool $top = false) : void
     {
-        $this->content=array_merge($this->content,$data);
+        foreach($groupdata as $data){
+            if($top == true){
+                array_unshift($this->content,$data);
+            }
+            else {
+                $this->content[] = $data;
+            }
+        }
     }
+
+
+    /** __________________________________________________________________________________
+    *   Set class to tag
+    *   @param class:string
+    */
+    public function set_class(string $class) : void
+    {
+        $this->class[]=$class;
+    }
+
+    /** __________________________________________________________________________________
+    *   Isset class into tag
+    *   @param class:string
+    */
+    public function isset_class(string $class) : bool
+    {
+        return in_array($class, $this->class);
+    }
+
+    /** __________________________________________________________________________________
+    *   Unset class from tag
+    *   @param class:string
+    */
+    public function unset_class(string $class) : void
+    {
+        unset($this->class[$class]);
+    }
+
 
 
     /**  __________________________________________________________________________________
@@ -58,10 +87,15 @@ class htmlObj {
     *   @param void
     *   @return string
     */
-    public function html() : string
+    public function getHtml() : string
     {
+        $standaLonetag = ['wbr','base','input','img','br','hr','link','meta'];
+
         // open tag
         $str="\n<$this->tagname";
+
+        $str.=' '.implode('',$this->class).' ';
+
         // browse propoperties
         foreach($this->props as $key => $value){
 
@@ -80,7 +114,7 @@ class htmlObj {
         }
 
         // close the tag
-        if($this->standalone == true){
+        if(in_array($this->tagname,$standaLonetag)){
             if (isset($this->content) && !empty($this->content)){
                 $str.=' content="'.$this->content.'" />';
             } else {
@@ -92,10 +126,9 @@ class htmlObj {
             if (isset($this->content) && !empty($this->content)){
                 $str.=$this->content;
             }
-            // close double tag execpting Doctype
-            if (!preg_match('#!DOCTYPE#i',$this->tagname)){
+            // close double tag execpting Doctype{
                 $str.='</'.$this->tagname.">\n";
-            }
+
         }
         // return html formated string
         return $str;
@@ -103,13 +136,15 @@ class htmlObj {
 
     /**  __________________________________________________________________________________
     *   recursive function used in html() method previously defined
+    *   @param datacontent:array
+    *   @return string
     */
     private static function recursive(array $datacontent) : string
     {
         $content ='';
         foreach($datacontent as $obj){
             if (is_object($obj)) {
-                $content .= $obj->html();
+                $content .= $obj->getHtml();
             }
             elseif (is_array($obj)){
                 $content .= self::recursive($obj);
