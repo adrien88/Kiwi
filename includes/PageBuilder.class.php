@@ -2,7 +2,7 @@
 
 // namespace kiwi\pageBuilder;
 
-class pageBuilder {
+class PageBuilder {
 
 
     public $PAGE = [];
@@ -163,12 +163,15 @@ class pageBuilder {
 
 
     /**
-    *
+    *   Return a standard HTML page
+    *   @param void
+    *   @return string:pageHtml
     */
     public function render() : string
     {
         // adding footer scripts
         $this->PAGE->content[1]->set_content($this->ft_script);
+        // return a serialized standard HTML page
         return $this->doctype.$this->PAGE->getHtml();
     }
 

@@ -13,7 +13,7 @@ spl_autoload_register(function ($class) {
 
 
 // Creer une page par defaut
-$obj = new pageBuilder();
+$obj = new PageBuilder();
 $obj -> html5(['dir'=>'ltr', 'lang'=>'fr-FR','charset'=>'utf8','title'=>'Warrior','css'=>['test.css']],'');
 
 // Créer le titre

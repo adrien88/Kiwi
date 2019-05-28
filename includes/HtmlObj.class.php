@@ -9,7 +9,6 @@ class HtmlObj {
     public $class = [];
     public $content = [];
 
-
     /**  __________________________________________________________________________________
     *   To create a new HTML Tag !
     *   Tagname is resquired !
@@ -22,6 +21,7 @@ class HtmlObj {
     public function __construct(string $tagname, array $props = [], array $content = [])
     {
         $this->tagname = $tagname;
+        // $this->set_props(['id'=>$tagname.'#'.rand(1000,2000)]);
         $this->set_props($props);
         $this->set_content($content);
     }
@@ -135,7 +135,7 @@ class HtmlObj {
     }
 
     /**  __________________________________________________________________________________
-    *   recursive function used in html() method previously defined
+    *   recursive function used in getHtml() method previously defined
     *   @param datacontent:array
     *   @return string
     */
