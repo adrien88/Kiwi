@@ -1,5 +1,7 @@
 <?php
 
+// namespace kiwi\pageBuilder;
+
 class pageBuilder {
 
 
@@ -27,25 +29,25 @@ class pageBuilder {
         $head_content= [];
 
         // set head element
-        $head_content[] = new htmlObj('title',[],['content'=> $opts['title'] ?? 'New page' ]);
-        $head_content[] = new htmlObj('meta',[],['charset'=> $opts['charset'] ?? 'utf8' ]);
-        $head_content[] = new htmlObj('meta',[
+        $head_content[] = new HtmlObj('title',[],['content'=> $opts['title'] ?? 'New page' ]);
+        $head_content[] = new HtmlObj('meta',[],['charset'=> $opts['charset'] ?? 'utf8' ]);
+        $head_content[] = new HtmlObj('meta',[
             'name'      =>  "viewport",
             'content'   =>  "width=device-width, initial-scale=1, shrink-to-fit=no"
         ],[]);
 
         // // views/bootstrap4
-        $head_content[] = new htmlObj('link',[
+        $head_content[] = new HtmlObj('link',[
             'rel'=>"stylesheet",
             'href'=>"views/bootstrap4/bootstrap.min.css",
         ],[]);
-        $this->ft_script[] = new htmlObj('script',[
+        $this->ft_script[] = new HtmlObj('script',[
             'src'=>"views/bootstrap4/jquery-3.2.1.slim.min.js",
         ],[]);
-        $this->ft_script[] = new htmlObj('script',[
+        $this->ft_script[] = new HtmlObj('script',[
             'src'=>"views/bootstrap4/popper.min.js",
         ],[]);
-        $this->ft_script[] = new htmlObj('script',[
+        $this->ft_script[] = new HtmlObj('script',[
             'src'=>"views/bootstrap4/bootstrap.min.js",
         ],[]);
 
@@ -53,7 +55,7 @@ class pageBuilder {
         // Get CSS Files from list
         if (isset($opts['css']) && is_array($opts['css'])){
             foreach ($opts['css'] as $file) {
-                $head_content[] = new htmlObj(
+                $head_content[] = new HtmlObj(
                     'link', [
                         'rel'  =>   'stylesheet',
                         'type '=>   'text/css',
@@ -67,7 +69,7 @@ class pageBuilder {
         // array['SocialNet'][] = ['property'=>'og:title', 'content' => 'open graphcontent']
         if (isset($opts['SocialNet']) && is_array($opts['SocialNet'])){
             foreach ($opts['SocialNet'] as $meta) {
-                $head_content[] = new htmlObj(
+                $head_content[] = new HtmlObj(
                     'meta', [
                         'property'  =>  $meta['property'],
                         'content'=>   $meta['content'],
@@ -79,7 +81,7 @@ class pageBuilder {
         //  Get JS Files from list
         if (isset($opts['js']) && is_array($opts['js'])){
             foreach ($opts['js'] as $file) {
-                $foot_javascript[] = new htmlObj(
+                $foot_javascript[] = new HtmlObj(
                     'script', [
                         // 'type' =>   'application/javascript',
                         'src'  =>   $file
@@ -89,12 +91,12 @@ class pageBuilder {
         }
 
         ## ASSEMBLY HTML HEAD
-        $head = new htmlObj('head',[],$head_content);
+        $head = new HtmlObj('head',[],$head_content);
 
         ## ASSEMBLY HTML BODY
-        $body = new htmlObj('body',['id'=>'body'],[]);
+        $body = new HtmlObj('body',['id'=>'body'],[]);
 
-        $this->PAGE = new htmlObj(
+        $this->PAGE = new HtmlObj(
             'html',
             ['lang'=> $opts['lang'] ?? 'en-EN','dir'=> $opts['dir'] ?? 'ltr'],
             [$head,$body]
@@ -143,18 +145,18 @@ class pageBuilder {
                 foreach($opts['elemnts'] as $obj){
                     // if (!in_array('bt',$obj->class)){
                     if (!empty($opts['archi'][2])) {
-                        $stackDiv[] = new htmlObj('div',['class'=>$opts['archi'][2]],[$obj]);
+                        $stackDiv[] = new HtmlObj('div',['class'=>$opts['archi'][2]],[$obj]);
                     } else {
                         // unset($obj->class['bt']);
                         $stackDiv[] = $obj;
                     }
                 }
             }
-            $inrow = new htmlObj('div',['class'=>'row'],$stackDiv);
-            $indiv = new htmlObj('div',['class'=>$opts['archi'][1]],[$inrow]);
-            $inrow = new htmlObj('div',['class'=>'row'],[$indiv]);
+            $inrow = new HtmlObj('div',['class'=>'row'],$stackDiv);
+            $indiv = new HtmlObj('div',['class'=>$opts['archi'][1]],[$inrow]);
+            $inrow = new HtmlObj('div',['class'=>'row'],[$indiv]);
             $this->PAGE->content[1]->set_content(
-                [new htmlObj($opts['tagname'],['class'=>$opts['archi'][0]],[$inrow])]
+                [new HtmlObj($opts['tagname'],['class'=>$opts['archi'][0]],[$inrow])]
             );
         }
     }

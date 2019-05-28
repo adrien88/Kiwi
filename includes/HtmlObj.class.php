@@ -1,7 +1,8 @@
 <?php
 
+// namespace kiwi\HtmlObj;
 
-class htmlObj {
+class HtmlObj {
 
     public $tagname;
     public $props = [];
@@ -52,8 +53,6 @@ class htmlObj {
         }
     }
 
-
-
     /** __________________________________________________________________________________
     *   Set class to tag
     *   @param class:string
@@ -80,7 +79,6 @@ class htmlObj {
     {
         unset($this->class[$class]);
     }
-
 
 
     /**  __________________________________________________________________________________
