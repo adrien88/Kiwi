@@ -307,11 +307,6 @@ class EPDO3 {
         return $test;
     }
 
-    foreach($this->execRegex(['truc'=>'machin'],1) as $colname => $allowed){
-        if($allowed===true){
-
-        }
-    }
 
     /** __________________________________________________________________________________
     *   add or edit a regex rule
