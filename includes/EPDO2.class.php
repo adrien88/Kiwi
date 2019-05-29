@@ -1,6 +1,9 @@
 <?php
 
 /**
+ *
+ *  WARNING : Cause new EPDO lib, this file will be deleted soon.
+ *
  *  ePDO : extandedPDO
  *  To change config PDO : please, edit the config.ini file at root of website.
  *  Methods allow you to all basics functions
