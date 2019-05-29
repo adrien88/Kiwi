@@ -174,10 +174,6 @@ class EPDO3 {
         return $this->TABLE[$this->tablename];
     }
 
-
-
-
-
     /** __________________________________________________________________________________
     *   get table list
     *   @param : tablename
@@ -366,9 +362,7 @@ class EPDO3 {
     */
     final public function checkStruct(array $data, array $escape = ['ID'], $tablename = null)
     {
-        print_r($data);
 
-        // $this->getTableName($tablename);
         $struct = $this->getStruct();
 
         foreach ($struct as $col) {
@@ -391,9 +385,6 @@ class EPDO3 {
                 }
             }
         }
-        // $data = array_merge($struct,$data);
-
-        print_r($data);
         return $data;
     }
 
