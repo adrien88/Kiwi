@@ -55,7 +55,6 @@ class EpdoDBHandler {
         }
     }
 
-
     /** __________________________________________________________________________________
     *   select a database name
     *   @param database_name:string
