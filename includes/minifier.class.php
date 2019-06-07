@@ -3,8 +3,7 @@
 class minifier{
 
     /**
-    *   Auto mod : using by $_GET method to return minified code
-    *
+    *   Auto mod : using $_GET method to return minified code from a file
     *   @param void
     *   @return void
     */

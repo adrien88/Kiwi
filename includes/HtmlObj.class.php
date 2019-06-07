@@ -2,7 +2,7 @@
 
 // namespace kiwi\HtmlObj;
 
-class HtmlObj {
+class HtmlObj extends htmlObjHandler {
 
     public $tagname;
     public $props = [];
