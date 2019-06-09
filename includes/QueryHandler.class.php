@@ -64,8 +64,9 @@ class EpdoQueryHandler {
     *   @param : string query
     *   @return success:array
     *   @return error:false:throw:error_message
-    *
+    *   
     */
+
     // final public function search(array $pattern, $cols = '*')
     // {
     //     $str = '';
@@ -75,9 +76,6 @@ class EpdoQueryHandler {
     //     $req = 'SELECT '.$cols.' WHERE '.$str.';';
     //     return $this->query($req);
     // }
-
-
-
 
     /** __________________________________________________________________________________
     *   Insert data into table

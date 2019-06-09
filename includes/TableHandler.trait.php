@@ -1,6 +1,6 @@
 <?php
 
-class EpdoTableHandler {
+trait TableHandler {
 
     // Current Table
     private static $TABLES = [];
@@ -12,12 +12,8 @@ class EpdoTableHandler {
     *   ]
     */
 
-    // current table name
-    private $tablename = '';
-
-    public function __construct() {
-
-    }
+    # Table name used
+    private $currentTable = '';
 
     /** __________________________________________________________________________________
     *   data checking complete missing data.
