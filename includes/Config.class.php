@@ -65,63 +65,28 @@ class Config {
     * @param string:filename;array:config
     * @return bool
     */
-
     final public static function save($filename,array $array = [])
     {
-        /**
-        * Recursive function to stringify array
-        * @param array
-        * @return string
-        */
-        function following($array,$iter,$ckey=null)
-        {
-            $iter++;
-            $str='';
-            foreach ( $array as $key => $value ) {
+        $string = '';
+        ##! asort will send sub array at last
+        asort($array);
+        foreach ( $array as $key => $value ) {
+            $string .= "\n";
+            if(is_array($value)) {
 
-                // escapes key chars
-                $key = str_replace('\'','\\\'',$key);
-                $tab = '';
-                for($i=0;$i<$iter;$i++){
-                    $tab.="\t";
-                }
+                $string .= "\n[$key]";
 
-                // if is array : use function recusivly
-                if (is_array($value)) {
-                    if(isset($ckey)){
-                        $str .= $tab."[$ckey][$key]\n";
-                    }
-                    else {
-                        $str .= $tab."[$key]\n";
-                    }
-                    $str .= following($value,$iter,$key)."\n";
-                }
-
-                // else stringify
-                else {
-                    if (is_string($value)) {
-                        // escapes values chars
-                        $value = str_replace('\'','\\\'',$value);
-                        $str .= $tab."'$key' = '$value'\n";
-                    }
-                    else if (is_bool($value)) {
-                        if ($value === true){
-                            $str .= $tab."'$key' = true\n";
-                        }
-                        else {
-                            $str .= $tab."'$key' = false\n";
-                        }
-                    }
-                    else {
-                        $str .= $tab."'$key' = $value\n";
-                    }
-
+                foreach ( $value as $subkey => $subvalue ) {
+                    $subkey = is_int($subkey) ? "'$subkey'" : $subkey;
+                    $subvalue = is_array($subvalue) ? serialize($subvalue) : $subvalue;
+                    $string .= "\n\t $subkey = $subvalue ";
                 }
             }
-            return $str;
+            else {
+                $string .= "$key = $value ";
+            }
         }
-        // config ini file file filled with ini variables
-        return file_put_contents( $filename, following($array,0));
+        return file_put_contents($filename, $string);
     }
 
     /**
