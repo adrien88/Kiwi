@@ -12,8 +12,6 @@ trait TableHandler {
     *   ]
     */
 
-    # Table name used
-    private $currentTable = '';
 
     /** __________________________________________________________________________________
     *   data checking complete missing data.

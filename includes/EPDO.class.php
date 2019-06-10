@@ -13,6 +13,8 @@ class EPDO {
     # DataBase name used
     public $currentDB = '';
 
+
+
     /** __________________________________________________________________________________
     *   Create Object EPDO
     *   @param params:array,tablename:string
@@ -23,6 +25,7 @@ class EPDO {
     {
         // create an instance and get in
         DBHandler::connectDB($params);
+        $this->getBaseName($params['name']);
     }
 
     /** __________________________________________________________________________________
@@ -32,11 +35,12 @@ class EPDO {
     */
     final public function getBaseName(string $basename = null) : string
     {
-        if ((DBHandler::issetInstance($basename)) !== null) {
+        if (($this->issetBaseInstance($basename)) !== null) {
             $this->currentDB = $basename;
         }
         return $this->currentDB;
     }
+
 
     public function query() {
         try {

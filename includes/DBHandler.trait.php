@@ -58,7 +58,7 @@ trait DBHandler {
     *   @return success:database:object
     *   @return error:false
     */
-    final public static function issetInstance(string $database = null)
+    final public static function issetBaseInstance(string $database = null)
     {
         if(isset($database) && isset(self::$PDO[$database]['dbo'])){
             return true;
@@ -74,7 +74,7 @@ trait DBHandler {
     *   @return success:database:object
     *   @return error:false
     */
-    final public static function getInstance(string $database = null)
+    final public static function getBaseInstance(string $database = null)
     {
         if(isset($database) && isset(self::$PDO[$database]['dbo'])){
             return self::$PDO[$database]['dbo'];
