@@ -36,6 +36,7 @@ trait DBHandler {
                 // instnce PDO in var
                 self::$PDO[$DB['name']]['dbo'] = new PDO ($req,$DB['login'],$DB['passwd'],$options);
                 self::$PDO[$DB['name']]['tables'] = self::tableList($DB['name'],'TABLE_NAME');
+                self::$PDO[$DB['name']]['type'] = $DB['type'];
 
                 // print_r(self::$PDO[$DB['name']]['tables']);
 
