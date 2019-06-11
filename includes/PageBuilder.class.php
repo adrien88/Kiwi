@@ -41,15 +41,15 @@ class PageBuilder {
             'rel'=>"stylesheet",
             'href'=>"views/bootstrap4/bootstrap.min.css",
         ],[]);
-        $this->ft_script[] = new HtmlObj('script',[
-            'src'=>"views/bootstrap4/jquery-3.2.1.slim.min.js",
-        ],[]);
-        $this->ft_script[] = new HtmlObj('script',[
-            'src'=>"views/bootstrap4/popper.min.js",
-        ],[]);
-        $this->ft_script[] = new HtmlObj('script',[
-            'src'=>"views/bootstrap4/bootstrap.min.js",
-        ],[]);
+        // $this->ft_script[] = new HtmlObj('script',[
+        //     'src'=>"views/bootstrap4/jquery-3.2.1.slim.min.js",
+        // ],[]);
+        // $this->ft_script[] = new HtmlObj('script',[
+        //     'src'=>"views/bootstrap4/popper.min.js",
+        // ],[]);
+        // $this->ft_script[] = new HtmlObj('script',[
+        //     'src'=>"views/bootstrap4/bootstrap.min.js",
+        // ],[]);
 
 
         // Get CSS Files from list
