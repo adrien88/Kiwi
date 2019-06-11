@@ -5,35 +5,35 @@
     include __DIR__.'/DBHandler.trait.php';
     include __DIR__.'/TableHandler.trait.php';
 
-class EPDO {
+class EPDO extends ObjData {
 
     # use traits
     use DBHandler, TableHandler;
 
     # DataBase name used
     public $currentDB = '';
-
+    public $currentTable = '';
 
 
     /** __________________________________________________________________________________
     *   Create Object EPDO
     *   @param params:array,tablename:string
     *   @return EPDO:object
-    *
     */
     public function __construct(array $params = [], string $tablename = "")
     {
         // create an instance and get in
         DBHandler::connectDB($params);
-        $this->getBaseName($params['name']);
+        $this->selectBase($params['name']);
+        $this->selectTable($tablename);
     }
 
     /** __________________________________________________________________________________
-    *   select a table name
+    *   select a base name
     *   @param base_name:string
     *   @return base_name:string
     */
-    final public function getBaseName(string $basename = null) : string
+    final public function selectBase(string $basename = null) : string
     {
         if (($this->issetBaseInstance($basename)) !== null) {
             $this->currentDB = $basename;
@@ -41,14 +41,36 @@ class EPDO {
         return $this->currentDB;
     }
 
+    /** __________________________________________________________________________________
+    *   select a table name
+    *   @param table_name:string
+    *   @return table_name:string
+    */
+    final public function selectTable($tablename = null) : string
+    {
+        if(isset($tablename)){
 
-    public function query() {
+        }
+        return $this->tablename;
+    }
+
+
+
+
+
+
+    public function query(string $req)
+    {
         try {
             ## get db && get table(+regex)
             $db = DBHandler::getInstance($this->currentDB);
 
             ## create hendler
+            $handler = new QueryHandler();
+
             ## apply query
+            $data = DBHandler::getInstance($this->getBaseName())->query();
+
             ## return result
         }
         catch (ERROR $e){
@@ -56,7 +78,14 @@ class EPDO {
         }
     }
 
-    public function add() {
+
+
+
+
+
+
+    public function add()
+    {
         try {
             ## get db && get table(+regex)
             ## create hendler
@@ -69,7 +98,8 @@ class EPDO {
     }
 
 
-    public function edit() {
+    public function edit()
+    {
         try {
             ## get db && get table(+regex)
             ## create hendler
@@ -81,8 +111,8 @@ class EPDO {
         }
     }
 
-
-    public function delete() {
+    public function delete()
+    {
         try {
             ## get db && get table(+regex)
             ## create hendler
@@ -92,6 +122,19 @@ class EPDO {
         catch (ERROR $e){
             ## error handling
         }
+    }
+
+    public function truncate()
+    {
+        ## get db && get table(+regex)
+        $req = 'TRUNCATE TABLE '.$this->currentTable;
+    }
+
+    public function drop()
+    {
+        ## get db && get table(+regex)
+        $req = 'DROP TABLE '.$this->currentTable;
+
     }
 
 

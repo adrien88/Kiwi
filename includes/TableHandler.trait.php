@@ -12,7 +12,6 @@ trait TableHandler {
     *   ]
     */
 
-
     /** __________________________________________________________________________________
     *   data checking complete missing data.
     *   @param table_structure:array,data:array,tablename:string
@@ -43,19 +42,7 @@ trait TableHandler {
         return $data;
     }
 
-    /** __________________________________________________________________________________
-    *   select a table name
-    *   @param table_name:string
-    *   @return table_name:string
-    */
-    final public function getTableName($tablename = null) : string
-    {
-        if(isset($tablename)){
-            $this->tablename = $tablename;
-            $this->TABLES[$tablename] = '';
-        }
-        return $this->tablename;
-    }
+
 
     /** __________________________________________________________________________________
     *   select a table object (if selectable or selected)
@@ -78,22 +65,6 @@ trait TableHandler {
 
 
 
-    /** __________________________________________________________________________________
-    *   test if table exists
-    *   @param : tablename
-    *   @return success:true
-    *   @return error:false
-    */
-    final public function ifTableExists(string $tablename,string $dbname = null)
-    {
-        $list = self::$PDO[$DB['name']][$this->getDBname($dbname)]['tables'];
-        if(is_array($list) && in_array($tablename,$list[0])){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
 
     /** __________________________________________________________________________________
     *   get table structure
@@ -103,7 +74,7 @@ trait TableHandler {
     */
     final public function getStruct($fieldname = null)
     {
-        $req = "SHOW COLUMNS FROM ".$this->getTableName();
+        $req = "SHOW COLUMNS FROM ".$this->getTable();
         $list = $this->getDB()->query($req);
         if (!is_bool($list)) {
             $data = $list->fetchAll();

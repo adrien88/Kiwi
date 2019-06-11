@@ -12,13 +12,14 @@
 *   delete ( condition(array), [tablename(string)] ) : bool
 *
 */
-class EpdoQueryHandler {
+
+class QueryHandler {
 
     private $PDO;
     private $tablename;
 
 
-    public function __construct(PDO $PDO, string $tablename) {
+    public function __construct(PDO &$PDO, string $tablename) {
         $this->PDO = $PDO;
         $this->tablename = $tablename;
     }
@@ -64,7 +65,7 @@ class EpdoQueryHandler {
     *   @param : string query
     *   @return success:array
     *   @return error:false:throw:error_message
-    *   
+    *
     */
 
     // final public function search(array $pattern, $cols = '*')

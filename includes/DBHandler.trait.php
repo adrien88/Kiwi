@@ -123,4 +123,21 @@ trait DBHandler {
         }
         return $tab;
     }
+
+    /** __________________________________________________________________________________
+    *   test if table exists
+    *   @param : tablename
+    *   @return success:true
+    *   @return error:false
+    */
+    final public function ifTableExists(string $tablename, string $dbname) : bool
+    {
+        if(in_array($tablename, self::$PDO[$dbname]['tables'])){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }
