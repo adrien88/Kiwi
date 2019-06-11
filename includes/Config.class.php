@@ -12,8 +12,10 @@ class Config {
     * @return object
     */
     public function __construct($filename){
-        if (file_exists($filename)) {
-            $this->CONFIG = $this->load($filename);
+        if (
+            ($this->CONFIG = $this->load($filename))
+            && !empty($this->CONFIG)
+        ){
             $this->autosave(true);
         }
         else{
@@ -56,7 +58,9 @@ class Config {
     */
     final public static function load($filename)
     {
-        return parse_ini_file($filename,1);
+        if (file_exists($filename)) {
+            return parse_ini_file($filename,1);
+        }
     }
 
 
@@ -93,7 +97,7 @@ class Config {
     * Autosave content at object desctruct
     */
     public function __destruct(){
-        if ($this->AS == 1) {
+        if ($this->AS == true) {
             return $this->save($this->FILENAME,$this->CONFIG);
         }
     }
