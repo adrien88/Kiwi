@@ -5,8 +5,7 @@
 
 ini_set('display_errors','1');
 
-spl_autoload_register(function ($class) {
-    include 'includes/' . $class . '.class.php';
-});
+require 'includes/Autoloader.php';
+Autoloader::register();
 
 include 'unit_test/AUTO.php';
