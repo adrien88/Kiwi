@@ -29,7 +29,7 @@ class EPDO extends ObjData {
     }
 
     /** __________________________________________________________________________________
-    *   select a base name
+    *   select a base by name
     *   @param base_name:string
     *   @return base_name:string
     */
@@ -41,11 +41,18 @@ class EPDO extends ObjData {
         return $this->currentDB;
     }
 
-
-
-
-
-
+    /** __________________________________________________________________________________
+    *   select a table by name
+    *   @param table_name:string
+    *   @return table_name:string
+    */
+    final public function selectTable(string $tablename = null) : string
+    {
+        if (($this->issetTableInstance($tablename)) !== null) {
+            $this->currentTable = $tablename;
+        }
+        return $this->currentTable;
+    }
 
 
 
