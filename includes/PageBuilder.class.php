@@ -22,7 +22,7 @@ class PageBuilder {
     public function html5(array $opts = null, $content=''){
         $this->doctype  = "<!DOCTYPE html>
         <!--
-            \tBOILLEY Adrien © 2019 GPL
+            \tBOILLEY Adrien © 2019 GPL 3.0
             \tThis website was powered by Kiwi Framework
             \tMore about kiwi at : https://github.com/adrien88/Kiwi
         -->\n ";
