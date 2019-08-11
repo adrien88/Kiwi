@@ -65,10 +65,22 @@ trait TableHandler {
 
 
 
+    /** __________________________________________________________________________________
+    *   select a table name
+    *   @param table_name:string
+    *   @return table_name:string
+    */
+    final public function selectTable($tablename = null) : string
+    {
+        if(isset($tablename)){
+
+        }
+        return self::$tablename;
+    }
 
     /** __________________________________________________________________________________
     *   get table structure
-    *   @param : colunms name
+    *   @param colunmsname:string
     *   @return success:array
     *   @return error:false
     */

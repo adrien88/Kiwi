@@ -1,9 +1,9 @@
 <?php
 
+# import traits
+include __DIR__.'/DBHandler.trait.php';
+include __DIR__.'/TableHandler.trait.php';
 
-    # import traits
-    include __DIR__.'/DBHandler.trait.php';
-    include __DIR__.'/TableHandler.trait.php';
 
 class EPDO extends ObjData {
 
@@ -41,18 +41,9 @@ class EPDO extends ObjData {
         return $this->currentDB;
     }
 
-    /** __________________________________________________________________________________
-    *   select a table name
-    *   @param table_name:string
-    *   @return table_name:string
-    */
-    final public function selectTable($tablename = null) : string
-    {
-        if(isset($tablename)){
 
-        }
-        return $this->tablename;
-    }
+
+
 
 
 
@@ -77,12 +68,6 @@ class EPDO extends ObjData {
             ## error handling
         }
     }
-
-
-
-
-
-
 
     public function add()
     {
