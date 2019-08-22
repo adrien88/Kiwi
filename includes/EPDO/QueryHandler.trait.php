@@ -13,16 +13,8 @@
 *
 */
 
-class QueryHandler {
+trait QueryHandler {
 
-    private $PDO;
-    private $tablename;
-
-
-    public function __construct(PDO &$PDO, string $tablename) {
-        $this->PDO = $PDO;
-        $this->tablename = $tablename;
-    }
 
 
     /** __________________________________________________________________________________

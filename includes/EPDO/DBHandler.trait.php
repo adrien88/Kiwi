@@ -1,5 +1,7 @@
 <?php
 
+// namespace EPDO\DBHandler;
+
 trait DBHandler {
 
     // PDO instances
@@ -12,7 +14,6 @@ trait DBHandler {
     *       ]
     *   ]
     */
-
 
 
     /** __________________________________________________________________________________

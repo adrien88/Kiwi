@@ -1,4 +1,5 @@
 <?php
+// namespace EPDO\TableHandler;
 
 trait TableHandler {
 
@@ -13,44 +14,11 @@ trait TableHandler {
     */
 
     /** __________________________________________________________________________________
-    *   data checking complete missing data.
-    *   @param table_structure:array,data:array,tablename:string
-    *   @return data:array
-    */
-    final public function checkStruct(array $struct, array $data, array $escape = ['ID']) : array
-    {
-        foreach ($struct as $col) {
-            if (
-                !in_array($col['Field'],$escape) &&
-                !array_key_exists($col['Field'], $data)
-            ){
-                echo 'champs à ajouter  :'.$col['Field'].'<br>';
-                switch($col['Type']){
-                    case 'varchar';
-                    case 'text';
-                        $data[$col['Field']] = '';
-                    break;
-                    case 'timestamp';
-                        $data[$col['Field']] = time();
-                    break;
-                    default;
-                        $data[$col['Field']] = 0;
-                    break;
-                }
-            }
-        }
-        return $data;
-    }
-
-
-
-    /** __________________________________________________________________________________
     *   select a table object (if selectable or selected)
     *   @param table_name:string
     *   @return success:table:object
     *   @return error:false
     */
-
     final public function getTable($table = null) : array
     {
         if (isset($table) && in_array($table, self::$PDO[$this->dbname]['tables'])) {
@@ -63,6 +31,20 @@ trait TableHandler {
         return $this->TABLE[$this->tablename];
     }
 
+    /** __________________________________________________________________________________
+    *   test if table instance exists
+    *   @param table_name:string
+    *   @return bool
+    */
+    final public function issetTableInstance(string $tablename) : bool
+    {
+        if(isset($tablename) && isset(self::$TABLES[$tablename])) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
 
 
@@ -95,5 +77,36 @@ trait TableHandler {
         } else {
             return false;
         }
+    }
+
+
+    /** __________________________________________________________________________________
+    *   data checking complete missing data.
+    *   @param table_structure:array,data:array,tablename:string
+    *   @return data:array
+    */
+    final public function checkStruct(array $struct, array $data, array $escape = ['ID']) : array
+    {
+        foreach ($struct as $col) {
+            if (
+                !in_array($col['Field'],$escape) &&
+                !array_key_exists($col['Field'], $data)
+            ){
+                echo 'champs à ajouter  :'.$col['Field'].'<br>';
+                switch($col['Type']){
+                    case 'varchar';
+                    case 'text';
+                    $data[$col['Field']] = '';
+                    break;
+                    case 'timestamp';
+                    $data[$col['Field']] = time();
+                    break;
+                    default;
+                    $data[$col['Field']] = 0;
+                    break;
+                }
+            }
+        }
+        return $data;
     }
 }

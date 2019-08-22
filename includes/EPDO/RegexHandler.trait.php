@@ -20,13 +20,9 @@
 *       delete all regex
 */
 
-class EpdoRegexHandler {
+trait EpdoRegexHandler {
 
     private $REGEX=[];
-
-    public function __construct() {
-        $this->defaultRegex();
-    }
 
 
     /** __________________________________________________________________________________
