@@ -1,11 +1,11 @@
 <?php
 
+
 # import traits
-include __DIR__.'/DBHandler.trait.php';
-include __DIR__.'/TableHandler.trait.php';
+include __DIR__.'/EPDO/DBHandler.trait.php';
+include __DIR__.'/EPDO/TableHandler.trait.php';
 
-
-class EPDO extends ObjData {
+class EPDO {
 
     # use traits
     use DBHandler, TableHandler;
@@ -53,8 +53,6 @@ class EPDO extends ObjData {
         }
         return $this->currentTable;
     }
-
-
 
 
     public function query(string $req)

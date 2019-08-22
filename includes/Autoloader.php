@@ -15,6 +15,11 @@ class Autoloader  {
     */
     static function autoload(string $classname) : void
     {
-        include 'includes/' . $classname . '.class.php';
+        $classname = str_replace('\\','/',$classname);
+        $classpath = 'includes/' . $classname . '.class.php';
+
+        if(file_exists($classpath)){
+            require_once $classpath;
+        }
     }
 }
