@@ -20,7 +20,7 @@
 *       delete all regex
 */
 
-trait EpdoRegexHandler {
+trait RegexHandler {
 
     private $REGEX=[];
 

@@ -4,16 +4,17 @@
 # import traits
 include __DIR__.'/EPDO/DBHandler.trait.php';
 include __DIR__.'/EPDO/TableHandler.trait.php';
+include __DIR__.'/EPDO/QueryHandler.trait.php';
+include __DIR__.'/EPDO/RegexHandler.trait.php';
 
 class EPDO {
 
     # use traits
-    use DBHandler, TableHandler;
+    use DBHandler, TableHandler, QueryHandler, RegexHandler;
 
     # DataBase name used
     public $currentDB = '';
     public $currentTable = '';
-
 
     /** __________________________________________________________________________________
     *   Create Object EPDO
@@ -61,11 +62,9 @@ class EPDO {
             ## get db && get table(+regex)
             $db = DBHandler::getInstance($this->currentDB);
 
-            ## create hendler
-            $handler = new QueryHandler();
-
             ## apply query
-            $data = DBHandler::getInstance($this->getBaseName())->query();
+            $basename = $this->getBaseName();
+            $data = DBHandler::getInstance($basename)->query($req);
 
             ## return result
         }
