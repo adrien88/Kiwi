@@ -7,7 +7,7 @@ Yes, it's (a bit) messy. I will re-organize my librairie soon. I'll trying to us
 ## Installing
 
 ```
-    Extract and upload contant of tarball to your web hoster.
+    Note ready to use.
 ```
 
 ## Authors
