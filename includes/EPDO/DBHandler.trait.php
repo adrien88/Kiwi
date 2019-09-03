@@ -1,12 +1,11 @@
 <?php
 
-// namespace EPDO\DBHandler;
-
 trait DBHandler {
 
     // PDO instances
     private static $PDO = [];
-    /**
+
+    /*
     * PDO [
     *   dbname => [
     *       dbo => PDO object
@@ -15,12 +14,11 @@ trait DBHandler {
     *   ]
     */
 
-
-    /** __________________________________________________________________________________
+    /**
     *   Create instance in static PDO
+    *
     *   @param array:['name','host','login','passwd','charset']
     *   @return void
-    *
     */
     final public static function connectDB(array $DB)
     {
@@ -54,8 +52,9 @@ trait DBHandler {
     }
 
 
-    /** __________________________________________________________________________________
+    /**
     *   select a database object (if selectable or selected)
+    *
     *   @param database:string
     *   @return success:database:object
     *   @return error:false
@@ -70,8 +69,9 @@ trait DBHandler {
         }
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   select a database object (if selectable or selected)
+    *
     *   @param database:string
     *   @return success:database:object
     *   @return error:false
@@ -86,8 +86,9 @@ trait DBHandler {
         }
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   unconnectDB
+    *
     *   @param database:string
     *   @return bool
     */
@@ -100,8 +101,9 @@ trait DBHandler {
         return false;
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   get table list
+    *
     *   @param string tablename
     *   @return array (list of tables names)
     */
@@ -125,12 +127,14 @@ trait DBHandler {
         return $tab;
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   test if table exists
+    *
     *   @param : tablename
     *   @return success:true
     *   @return error:false
     */
+
     final public function ifTableExists(string $tablename, string $dbname) : bool
     {
         if(in_array($tablename, self::$PDO[$dbname]['tables'])){

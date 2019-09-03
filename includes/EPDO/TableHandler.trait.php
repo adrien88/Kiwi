@@ -13,7 +13,8 @@ trait TableHandler {
     *   ]
     */
 
-    /** __________________________________________________________________________________
+    /**
+    *
     *   select a table object (if selectable or selected)
     *   @param table_name:string
     *   @return success:table:object
@@ -31,8 +32,9 @@ trait TableHandler {
         return $this->TABLE[$this->tablename];
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   test if table instance exists
+    *
     *   @param table_name:string
     *   @return bool
     */
@@ -48,9 +50,9 @@ trait TableHandler {
 
 
 
-
-    /** __________________________________________________________________________________
+    /**
     *   get table structure
+    *
     *   @param colunmsname:string
     *   @return success:array
     *   @return error:false
@@ -80,8 +82,9 @@ trait TableHandler {
     }
 
 
-    /** __________________________________________________________________________________
+    /**
     *   data checking complete missing data.
+    *
     *   @param table_structure:array,data:array,tablename:string
     *   @return data:array
     */

@@ -1,7 +1,6 @@
 <?php
 
-
-# import traits
+// import traits
 include __DIR__.'/EPDO/DBHandler.trait.php';
 include __DIR__.'/EPDO/TableHandler.trait.php';
 include __DIR__.'/EPDO/QueryHandler.trait.php';
@@ -10,14 +9,14 @@ include __DIR__.'/EPDO/RegexHandler.trait.php';
 
 class EPDO {
 
-    # use traits
+     // use imported traits
     use DBHandler, TableHandler, QueryHandler, RegexHandler;
 
-    # DataBase name used
+    // DataBase name used
     public $currentDB = '';
     public $currentTable = '';
 
-    /** __________________________________________________________________________________
+    /**
     *   Create Object EPDO
     *
     *   @param params:array,tablename:string
@@ -31,7 +30,7 @@ class EPDO {
         $this->selectTable($tablename);
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   select a base by name
     *
     *   @param base_name:string
@@ -44,9 +43,9 @@ class EPDO {
         }
         return $this->currentDB;
     }
-    
 
-    /** __________________________________________________________________________________
+
+    /**
     *   select a table by name
     *
     *   @param table_name:string
@@ -64,18 +63,18 @@ class EPDO {
     public function query(string $req)
     {
         try {
-            ## get db && get table(+regex)
+            // get db && get table(+regex)
             $db = DBHandler::getInstance($this->currentDB);
 
-            ## apply query
+            // apply query
             $basename = $this->getBaseName();
             $data = DBHandler::getInstance($basename)->query($req);
 
-            ## return result
+            // return result
 
         }
         catch (ERROR $e){
-            ## error handling
+             // error handling
         }
     }
 

@@ -1,5 +1,5 @@
 <?php
-/** __________________________________________________________________________________
+/**
 *   Regex manipulation methods
 *
 *   defaultRegex( void ) : void
@@ -25,8 +25,9 @@ trait RegexHandler {
     private $REGEX=[];
 
 
-    /** __________________________________________________________________________________
+    /**
     *   import default model regex
+    *
     *   @param void
     *   @return void
     */
@@ -43,9 +44,10 @@ trait RegexHandler {
         ];
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   apply regex on data and return array with [colname] => 1 or 0.
     *   allowspecs : allowing specifics words.
+    *
     *   @param array:[string:colname=>string:regex],bool:allowSpec
     *   @return array[string:colname=>int].
     */
@@ -66,8 +68,9 @@ trait RegexHandler {
         return $test;
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   add or edit a regex rule
+    *
     *   @param array[col_1=>'regex_1',etc]
     *   @return true
     */
@@ -77,8 +80,9 @@ trait RegexHandler {
         return true;
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   delete a regex rule
+    *
     *   @param array[col_1,col_2,etc]
     *   @return true
     */
@@ -90,8 +94,9 @@ trait RegexHandler {
         return true;
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   drop all regex
+    *
     *   @param void
     *   @return true
     */

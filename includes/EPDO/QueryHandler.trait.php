@@ -17,8 +17,9 @@ trait QueryHandler {
 
 
 
-    /** __________________________________________________________________________________
+    /** 
     *   send query request into table
+    *
     *   @param : string query
     *   @return success:array
     *   @return error:false:throw:error_message
@@ -52,8 +53,9 @@ trait QueryHandler {
         }
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   query a psecific patter data into table
+    *
     *   @param : string query
     *   @return success:array
     *   @return error:false:throw:error_message
@@ -70,8 +72,9 @@ trait QueryHandler {
     //     return $this->query($req);
     // }
 
-    /** __________________________________________________________________________________
+    /**
     *   Insert data into table
+    *
     *   @param : string tablename; array : data []
     *   @return success:true
     *   @return error:(string)errormessage
@@ -98,8 +101,9 @@ trait QueryHandler {
         }
     }
 
-    /** __________________________________________________________________________________
+    /**
     *   Update data into table
+    *
     *   @param : string tablename; array : data []
     *   @return success:true
     *   @return error:(string)errormessage
@@ -137,8 +141,9 @@ trait QueryHandler {
     }
 
 
-    /** __________________________________________________________________________________
+    /**
     *   Delete data from table
+    *
     *   @param : string tablename; array : data []
     *   @return success:bool
     *   @return error:(string)errormessage
