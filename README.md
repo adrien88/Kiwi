@@ -7,7 +7,7 @@ Yes, it's (a bit) messy. I will re-organize my librairie soon. I'll trying to us
 ## Installing
 
 ```
-    Note ready to use.
+    Not ready to use.
 ```
 
 ## Authors
