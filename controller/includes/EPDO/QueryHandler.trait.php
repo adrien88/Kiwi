@@ -1,6 +1,6 @@
 <?php
 
-/** __________________________________________________________________________________
+/**
 *   DATA manipulation methods
 *
 *   query ( request(string), [Fetch_Method_Const] ) : mixed
@@ -15,9 +15,7 @@
 
 trait QueryHandler {
 
-
-
-    /** 
+    /**
     *   send query request into table
     *
     *   @param : string query

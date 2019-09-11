@@ -1,10 +1,10 @@
 <?php
 
 // import traits
-include __DIR__.'/EPDO/DBHandler.trait.php';
-include __DIR__.'/EPDO/TableHandler.trait.php';
-include __DIR__.'/EPDO/QueryHandler.trait.php';
-include __DIR__.'/EPDO/RegexHandler.trait.php';
+include 'controller/includes/EPDO/DBHandler.trait.php';
+include 'controller/includes/EPDO/TableHandler.trait.php';
+include 'controller/includes/EPDO/QueryHandler.trait.php';
+include 'controller/includes/EPDO/RegexHandler.trait.php';
 
 
 class EPDO {

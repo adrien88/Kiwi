@@ -69,7 +69,7 @@ class Router {
                 $out[$elem] = array_shift($parts);
             }
             $out[$keyargs]=$parts;
-
+            
             return $out;
         }
         return false;

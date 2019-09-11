@@ -16,7 +16,7 @@ class Autoloader  {
     static function autoload(string $classname) : void
     {
         $classname = str_replace('\\','/',$classname);
-        $classpath = 'includes/' . $classname . '.class.php';
+        $classpath = 'controller/class/' . $classname . '.class.php';
 
         if(file_exists($classpath)){
             require_once $classpath;

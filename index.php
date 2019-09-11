@@ -5,7 +5,7 @@
 
 ini_set('display_errors','1');
 
-require 'includes/Autoloader.php';
+require_once __DIR__.'/controller/includes/Autoloader.php';
 Autoloader::register();
 
 include 'unit_test/AUTO.php';

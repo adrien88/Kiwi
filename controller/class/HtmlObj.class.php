@@ -1,8 +1,7 @@
 <?php
 
-// namespace kiwi\HtmlObj;
 
-class HtmlObj extends htmlObjHandler {
+class HtmlObj {
 
     public $tagname;
     public $props = [];
