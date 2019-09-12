@@ -61,7 +61,7 @@ trait DBHandler {
     */
     final public static function issetBaseInstance(string $database = null)
     {
-        if(isset($database) && isset(self::$PDO[$database]['dbo'])){
+        if (isset($database) && isset(self::$PDO[$database]['dbo'])) {
             return true;
         }
         else {
@@ -78,9 +78,9 @@ trait DBHandler {
     */
     final public static function getBaseInstance(string $database = null)
     {
-        if(isset($database) && isset(self::$PDO[$database]['dbo'])){
+        if (isset($database) && self::issetBaseInstance($database)) {
             return self::$PDO[$database]['dbo'];
-        }
+        } 
         else {
             return false;
         }
@@ -112,19 +112,15 @@ trait DBHandler {
         $req = "SELECT $elem FROM INFORMATION_SCHEMA.TABLES
             WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='$dbname';";
 
-        if (isset(self::$PDO[$dbname])) {
-
-            $list = self::$PDO[$dbname]['dbo']->query($req);
-            $tab = [];
-
-            // warning : fetchAll musn't be a boolean !
-            if (!is_bool($list)){
-                foreach($list->fetchAll() as $col){
-                    $tab[] = $col;
-                }
+        $PDO = self::getBaseInstance($dbname);
+        if ($PDO !== false) {
+            $list = $PDO->query($req);
+            if (!is_bool($list)){  
+                return $list->fetchAll();
             }
         }
     }
+
 
     /**
     *   test if table exists
