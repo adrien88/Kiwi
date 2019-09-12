@@ -129,7 +129,6 @@ trait DBHandler {
     *   @return success:true
     *   @return error:false
     */
-
     final public function ifTableExists(string $tablename, string $dbname) : bool
     {
         if(in_array($tablename, self::$PDO[$dbname]['tables'])){
@@ -138,6 +137,17 @@ trait DBHandler {
         else {
             return false;
         }
+    }
+
+        /**
+    *   test if table exists
+    *
+    *   @return success:true
+    *   @return error:false
+    */
+    final public function getTableList(string $dbname) : array
+    {
+        return self::$PDO[$dbname]['tables'];
     }
 
 }
