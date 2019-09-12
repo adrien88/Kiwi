@@ -124,7 +124,6 @@ trait DBHandler {
                 }
             }
         }
-        return $tab;
     }
 
     /**
