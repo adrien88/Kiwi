@@ -1,77 +1,69 @@
 <?php
 
 /**
-*   Router class
-*   Use it outter instance like : Router::auto();
-*   It's work by aliasing : /my/url will ve associated to a controler file OR a
-*
-*/
+ *   Router class
+ *   Use it outter instance like#  Router::auto( [$aprams] );
+ *   
+ *
+ */
+
 class Router {
 
-    public static function auto(string $defaultPath) : void
+    /**
+     *  auto ( string $url)
+     * 
+     *  @param string '/truc/exemple.html',      
+     *  @return void
+     */
+    public static function auto($landing = '/home.html')
     {
+
         // get route function of structure
         // if can't : redirect user to landing page
         if (
-            ($URL = self::coreGetRoute(['module','function','args'])) === false
+            ($url = array_key_first($_GET)) === null
         ){
             header('location:'.$defaultPath);
             exit;
-        }
-
-        // get alias and include controler (or other content)
-        $alias = RouterHandler::get($URL['module']);
-
-        if (file_exists('controler/'.$alias)) {
-            include 'controler/'.$alias;
-        }
-        elseif(file_exists('view/cache/'.$alias)) {
-            include 'view/cache/'.$alias;
+        } 
+        else {
+            $alias = RouterHandler::get($url);
+            if (file_exists($alias)) {
+                include $alias;
+            }
         }
     }
 
-    /** __________________________________________________________________________________
-    * if isset $_GET
-    * Return route array from $_GET[0]
-    *
-    * @param array : data structure array[]
-    * ex : ( ['page','function', 'args'] )
-    *
-    * @return array
-    * ex for : 'foo/bar/camel/case' will return :
-    * array
-    *   ['path'] = foo/bar/camel/case
-    *   ['docroot'] = ./../../../
-    *   ['page'] = 'foo'
-    *   ['function'] = 'bar'
-    *   ['args'] = [ 'camel' , 'case' ]
-    */
-
-    public static function coreGetRoute( $struct=['module','funct','args'] )
+    /** 
+     *   routeByClass
+     *   
+     *   @param string url
+     *   @return void
+     */
+    public function routeByClass ($url)
     {
-        if (isset($_GET) && !empty($_GET)) {
+        $class = array_shift($url);
+        $method = array_shift($url);
+        $args = $url;
 
-            //  get path in array $parts
-            $out=[];
-            $out['path']=array_keys($_GET)[0];
-            $parts=explode('/',$out['path']);
+        if (class_exists($class) && !array_key_exists($class, $forbidden)) {
 
-            // create docroot ressource
-            // to create HTML backs links easier
-            $out['docRoot']='./';
-            for ($i=1; $i <= count($parts); $i++) {
-                $out['docRoot'].='../';
+            if (method_exists($InstanceAuto, $method)) {
+                $args = $args ?? [];
+                $InstanceAuto::$method($args);
             }
-
-            // organise args
-            $keyargs = array_pop($struct);
-            foreach ($struct as $elem){
-                $out[$elem] = array_shift($parts);
-            }
-            $out[$keyargs]=$parts;
             
-            return $out;
+            else {
+                echo 'Please give me a method to call like METHOD=theMethodName!';   
+                exit;
+            }
+
+        } 
+        else {
+            echo 'Please give me a class to instance like CLASS=MyClassName !\n';   
+            exit;
         }
-        return false;
     }
+
+
 }
