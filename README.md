@@ -53,7 +53,7 @@ root/
 ```
 
 ## working
-- EPDO class is initialized with defaut  : connecting database and standby. 
+- EPDO class is initialized with defaut  : connecting database and standby.
 - Router class is initialized with defaut and routing user to landing page.
 
 
