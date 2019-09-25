@@ -24,7 +24,7 @@ trait QueryHandler {
     */
     final public function query($req, $FETCH = null)
     {
-        $stat = $this->PDO->prepare($req);
+        $stat = self::$PDO->prepare($req);
         $stat->execute();
         if(
             ($error = $stat->errorInfo()[2])
@@ -86,7 +86,7 @@ trait QueryHandler {
 
         // Sand
         $req = "INSERT INTO ".$this->tablename." ($prepreq) VALUES ($prepval);";
-        $stat = $this->PDO->prepare($req);
+        $stat = self::$PDO->prepare($req);
         $stat->execute($data);
         if(
             ($error = $stat->errorInfo()[2]) &&
@@ -125,7 +125,7 @@ trait QueryHandler {
         $req = substr($req,0,-4).';';
 
         // Sand
-        $stat = $this->PDO->prepare($req);
+        $stat = self::$PDO->prepare($req);
         $stat->execute($data);
         if(
             ($error = $stat->errorInfo()[2]) &&
@@ -154,7 +154,7 @@ trait QueryHandler {
             $req .= ''.$key.' = :'.$key.' AND ';
         }
         $req = substr($req,0,-4).';';
-        $stat = $this->PDO->prepare($req);
+        $stat = self::$PDO->prepare($req);
         $stat->execute($cond);
         if(
             ($error = $stat->errorInfo()[2])

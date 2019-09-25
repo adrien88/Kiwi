@@ -1,41 +1,38 @@
 <?php
 
+
 // import traits
 include 'controller/includes/EPDO/DBHandler.trait.php';
 include 'controller/includes/EPDO/TableHandler.trait.php';
-include 'controller/includes/EPDO/QueryHandler.trait.php';
-include 'controller/includes/EPDO/RegexHandler.trait.php';
 
 
 class EPDO {
 
      // use imported traits
-    use DBHandler, TableHandler, QueryHandler, RegexHandler;
+    use DBHandler, TableHandler;
 
     // DataBase name used
     public $currentDB = '';
     public $currentTable = '';
 
     /**
-    *   Create Object EPDO
-    *
-    *   @param params:array,tablename:string
-    *   @return EPDO:object
-    */
-    public function __construct(array $params = [], string $tablename = "")
+     *   Create Object EPDO
+     *
+     *   @param params:array,tablename:string
+     *   @return EPDO:object
+     */
+    public function __construct(array $params = [])
     {
         // create an instance and get in
         DBHandler::connectDB($params);
-        $this->selectBase($params['name']);
-        $this->selectTable($tablename);
     }
 
     /**
-    *   select a base by name
-    *
-    *   @param base_name:string
-    *   @return base_name:string
-    */
+     *   Select a base by name
+     *
+     *   @param base_name:string
+     *   @return base_name:string
+     */
     final public function selectBase(string $basename = null) : string
     {
         if (($this->issetBaseInstance($basename)) !== null) {
@@ -46,11 +43,11 @@ class EPDO {
 
 
     /**
-    *   select a table by name
-    *
-    *   @param table_name:string
-    *   @return table_name:string
-    */
+     *   Select a table by name
+     *
+     *   @param table_name:string
+     *   @return table_name:string
+     */
     final public function selectTable(string $tablename = null) : string
     {
         if (($this->issetTableInstance($tablename)) !== null) {
@@ -58,78 +55,27 @@ class EPDO {
         }
         return $this->currentTable;
     }
-
-
-    public function query(string $req)
+  
+    
+    /**
+     *   Function to call table list
+     *
+     *   @param string dbname
+     *   @return array
+     */
+    final public function getTableList(string $dbname = null) 
     {
-        try {
-            // get db && get table(+regex)
-            $db = DBHandler::getInstance($this->currentDB);
-
-            // apply query
-            $basename = $this->getBaseName();
-            $data = DBHandler::getInstance($basename)->query($req);
-
-            // return result
-
+        if(isset($dbname) and DBHandler::issetBaseInstance($dbname)){
+            return DBHandler::getStaticTableList($dbname);
         }
-        catch (ERROR $e){
-             // error handling
-        }
-    }
-
-    public function add()
-    {
-        try {
-            ## get db && get table(+regex)
-            ## create hendler
-            ## apply query
-            ## return result
-        }
-        catch (ERROR $e){
-            ## error handling
+        else {
+            
         }
     }
 
 
-    public function edit()
-    {
-        try {
-            ## get db && get table(+regex)
-            ## create hendler
-            ## apply query
-            ## return result
-        }
-        catch (ERROR $e){
-            ## error handling
-        }
-    }
 
-    public function delete()
-    {
-        try {
-            ## get db && get table(+regex)
-            ## create hendler
-            ## apply query
-            ## return result
-        }
-        catch (ERROR $e){
-            ## error handling
-        }
-    }
 
-    public function truncate()
-    {
-        ## get db && get table(+regex)
-        $req = 'TRUNCATE TABLE '.$this->currentTable;
-    }
-
-    public function drop()
-    {
-        ## get db && get table(+regex)
-        $req = 'DROP TABLE '.$this->currentTable;
-
-    }
 
 
 }

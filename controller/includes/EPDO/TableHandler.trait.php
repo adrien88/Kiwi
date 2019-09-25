@@ -20,16 +20,12 @@ trait TableHandler {
     *   @return success:table:object
     *   @return error:false
     */
-    final public function getTable($table = null) : array
+    final public function getTable($dbname = null, $table = null)
     {
-        if (isset($table) && in_array($table, self::$PDO[$this->dbname]['tables'])) {
-            $this->tablename = $table;
-            return $this->TABLE[$table];
+        if (self::ifTableExists($dbname, $table) and !issetTableInstance($table)) {
+            self::$TABLES = self::getStruct($dbname, $table);
         }
-        elseif (isset($this->TABLE[$this->tablename])) {
-
-        }
-        return $this->TABLE[$this->tablename];
+        return self::$TABLES[$table];
     }
 
     /**
@@ -40,7 +36,7 @@ trait TableHandler {
     */
     final public function issetTableInstance(string $tablename) : bool
     {
-        if(isset($tablename) && isset(self::$TABLES[$tablename])) {
+        if(isset(self::$TABLES[$tablename])) {
             return true;
         }
         else {
@@ -57,10 +53,10 @@ trait TableHandler {
     *   @return success:array
     *   @return error:false
     */
-    final public function getStruct($fieldname = null)
+    final public function getStruct($dbname, $table, $fieldname = null)
     {
-        $req = "SHOW COLUMNS FROM ".$this->getTable();
-        $list = $this->getDB()->query($req);
+        $req = "SHOW COLUMNS FROM ".$table;
+        $list = self::$PDO[$dbname]->query($req);
         if (!is_bool($list)) {
             $data = $list->fetchAll();
             unset($list);
@@ -76,9 +72,7 @@ trait TableHandler {
                 }
             }
             return $data;
-        } else {
-            return false;
-        }
+        } 
     }
 
 
@@ -88,7 +82,7 @@ trait TableHandler {
     *   @param table_structure:array,data:array,tablename:string
     *   @return data:array
     */
-    final public function checkStruct(array $struct, array $data, array $escape = ['ID']) : array
+    final public function checkStruct(array $struct, array $data, array $escape = ['ID'])
     {
         foreach ($struct as $col) {
             if (
