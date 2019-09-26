@@ -153,7 +153,7 @@ trait DBHandler {
      *   @param string dbname
      *   @return array
      */
-    final public static function getStaticTableList(string $dbname) 
+    final public static function getStaticTableList(string $dbname = '') 
     {
         if (isset(self::$PDO[$dbname]['TABLES'])) {
             return self::$PDO[$dbname]['TABLES'];
@@ -163,21 +163,20 @@ trait DBHandler {
     
 
 
-
     /**
      *  
      *
      *   @param table_name:string
      *   @return table_name:
      */
-    // final public function loadTable(string $dbname = null, string $tablename = null)
-    // {       
-    //     self::getBaseInstance($dbname);
+    final public function loadTable(string $dbname = null, string $tablename = null)
+    {       
+        self::getBaseInstance($dbname);
 
-    //     if (self::ifTableExists($tablename)) {
-    //         self::getBaseInstance('');
-    //     }
+        if (self::ifTableExists($tablename)) {
+            self::getBaseInstance('');
+        }
 
-    // }
+    }
 
 }
