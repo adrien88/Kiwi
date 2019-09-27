@@ -7,7 +7,7 @@ class Tables {
 
     // use QueryHandler, RegexHandler;
     private $STRUCT;
-
+    private $DATA;
 
     /**
      * 
@@ -98,6 +98,7 @@ class Tables {
             ## error handling
         }
     }
+    
     
     public function truncate()
     {
