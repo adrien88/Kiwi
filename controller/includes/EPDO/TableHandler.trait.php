@@ -3,9 +3,7 @@
 
 trait TableHandler {
 
-    
-
-    // PDO instances
+    // Tables instances
     public static $TABLES = [];
 
     /*
@@ -17,18 +15,58 @@ trait TableHandler {
     */
 
 
+    /**
+     *  Creer la table sur le handler
+     */
 
+    public final static function createTable() {
+        self::$TABLES[$tablename] =  new Tables(); 
+    }
 
+    /**
+     *  Supprimer la table du handler
+     */
+    public final static function dropTable() {
+
+    }
+
+    /**
+     *   select a database object (if selectable or selected)
+     *
+     *   @param 
+     *   @return
+     *   @return 
+     */
+    final public static function issetTableInstance(string $tablename = null)
+    {
+        if (isset($database) && isset(self::$PDO[$database]['dbo'])) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     *   select a database object (if selectable or selected)
+     *
+     */
+    final public static function getTableInstance(string $tablename = null)
+    {
+        if (isset($database) && self::issetBaseInstance($database)) {
+            return self::$PDO[$database]['dbo'];
+        } 
+        else {
+            return false;
+        }
+    }
 
 
     /**
     *   load (or re-load) a tablee structure
     *
-    *   @param colunmsname:string
-    *   @return success:array
-    *   @return error:false
     */
-    final public function loadTableStruct(string $dbname, string $tablename, $fieldname = null, $return = false)
+    final public function loadTableStruct(string $dbname, string $tablename, $fieldname = null)
     {
         $data = [];
         $req = "SHOW COLUMNS FROM ".$tablename;
@@ -48,10 +86,6 @@ trait TableHandler {
                     }
                 }
             }
-        }
-        if($return === false){
-            self::$DPO[$dbname]['TABLES'][$tablename]['STRUCT'] = $data;
-        } else {
             return $data;
         }
     }
