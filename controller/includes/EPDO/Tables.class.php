@@ -1,14 +1,22 @@
 <?php 
 
-include 'controller/includes/EPDO/QueryHandler.trait.php';
-include 'controller/includes/EPDO/RegexHandler.trait.php';
+// include 'controller/includes/EPDO/QueryHandler.trait.php';
+// include 'controller/includes/EPDO/RegexHandler.trait.php';
 
-trait EPDOTables {
+class Tables {
 
-    use QueryHandler, RegexHandler;
+    // use QueryHandler, RegexHandler;
+    private $STRUCT;
 
 
-    
+    /**
+     * 
+     */
+    public function __conctruct(array $struct){
+        
+    }
+
+
     /**  
      *   
      *
@@ -18,12 +26,10 @@ trait EPDOTables {
     {
         try {
             // get db && get table(+regex)
-            $db = DBHandler::getInstance();
-            
+            // $db = DBHandler::getInstance();
             // apply query
-            $basename = $this->getBaseName();
-            $data = DBHandler::getInstance($basename)->query($req);
-            
+            // $basename = $this->getBaseName();
+            // $data = DBHandler::getInstance($basename)->query($req);
             // return result
             
         }
@@ -96,13 +102,11 @@ trait EPDOTables {
     public function truncate()
     {
         ## get db && get table(+regex)
-        $req = 'TRUNCATE TABLE '.$this->currentTable;
     }
 
     public function drop()
     {
         ## get db && get table(+regex)
-        $req = 'DROP TABLE '.$this->currentTable;
 
     }
 
