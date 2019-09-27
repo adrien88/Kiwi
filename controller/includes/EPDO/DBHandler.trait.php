@@ -35,7 +35,7 @@ trait DBHandler {
 
                 // instnce PDO in var
                 self::$PDO[$DB['name']]['dbo'] = new PDO ($req,$DB['login'],$DB['passwd'],$options);
-                self::$PDO[$DB['name']]['tables'] = self::tableList($DB['name'],'TABLE_NAME');
+                self::$PDO[$DB['name']]['tables'] = self::tableList($DB['name']);
                 self::$PDO[$DB['name']]['type'] = $DB['type'];
 
                 // print_r(self::$PDO[$DB['name']]['TABLES']);
@@ -53,12 +53,10 @@ trait DBHandler {
     }
 
     /**
-     *   select a database object (if selectable or selected)
-
+     *  test if object was instantiated
      *
      *   @param database:string
-     *   @return success:database:object
-     *   @return error:false
+     *   @return bool
      */
     final public static function issetBaseInstance(string $database = null)
     {
@@ -71,7 +69,7 @@ trait DBHandler {
     }
 
     /**
-     *   select a database object (if selectable or selected)
+     *   get instantiated object if exist
      *
      *   @param database:string
      *   @return success:database:object
@@ -88,30 +86,27 @@ trait DBHandler {
     }
 
     /**
-     *   unconnectDB
+     *   unconnectDB from handler with unset PDO
      *
      *   @param database:string
      *   @return bool
      */
-    final public static function unconnectDB($database = null) : bool
+    final public static function unconnectDB($database = null)
     {
-        if (isset(self::$PDO[$database])) {
-            self::$PDO[$database] = null;
-            return true;
-        }
-        return false;
+        unset(self::$PDO[$database]);
+           
     }
 
 
     /**
      *   return a table list
      *
-     *   @param string tablename
+     *   @param string:tablename
      *   @return array (list of tables names)
      */
-    final public static function tableList(string $dbname, string $elem = '*') : array
+    final public static function tableList(string $dbname) : array
     {
-        $req = "SELECT $elem FROM INFORMATION_SCHEMA.TABLES
+        $req = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
             WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='$dbname';";
 
         $PDO = self::getBaseInstance($dbname);
