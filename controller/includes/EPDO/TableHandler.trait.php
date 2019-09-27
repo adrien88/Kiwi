@@ -3,59 +3,35 @@
 
 trait TableHandler {
 
-    // Current Table
-    private static $TABLES = [];
-    /**
+    
+
+    // PDO instances
+    public static $TABLES = [];
+
+    /*
     * TABLES [
     *   tablename => [
-    *       struct => table Structure
-    *       regex => [ colname => regex ]
+    *       
+    *       ]
     *   ]
     */
 
-    /**
-    *
-    *   select a table object (if selectable or selected)
-    *   @param table_name:string
-    *   @return success:table:object
-    *   @return error:false
-    */
-    final public function getTable($dbname = null, $table = null)
-    {
-        if (self::ifTableExists($dbname, $table) and !issetTableInstance($table)) {
-            self::$TABLES = self::getStruct($dbname, $table);
-        }
-        return self::$TABLES[$table];
-    }
 
-    /**
-    *   test if table instance exists
-    *
-    *   @param table_name:string
-    *   @return bool
-    */
-    final public function issetTableInstance(string $tablename) : bool
-    {
-        if(isset(self::$TABLES[$tablename])) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+
 
 
 
     /**
-    *   get table structure
+    *   load (or re-load) a tablee structure
     *
     *   @param colunmsname:string
     *   @return success:array
     *   @return error:false
     */
-    final public function getStruct($dbname, $table, $fieldname = null)
+    final public function loadTableStruct(string $dbname, string $tablename, $fieldname = null, $return = false)
     {
-        $req = "SHOW COLUMNS FROM ".$table;
+        $data = [];
+        $req = "SHOW COLUMNS FROM ".$tablename;
         $list = self::$PDO[$dbname]->query($req);
         if (!is_bool($list)) {
             $data = $list->fetchAll();
@@ -67,14 +43,18 @@ trait TableHandler {
 
                 if (isset($fieldname)) {
                     if ($colData['Field'] == $fieldname) {
-                        return $data[$colnum];
+                        $data[$colnum];
+                        break;
                     }
                 }
             }
+        }
+        if($return === false){
+            self::$DPO[$dbname]['TABLES'][$tablename]['STRUCT'] = $data;
+        } else {
             return $data;
-        } 
+        }
     }
-
 
     /**
     *   data checking complete missing data.
