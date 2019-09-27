@@ -3,7 +3,7 @@
 trait DBHandler {
 
     // PDO instances
-    private static $PDO = [];
+    public static $PDO = [];
 
     /*
     * PDO [
@@ -35,7 +35,7 @@ trait DBHandler {
 
                 // instnce PDO in var
                 self::$PDO[$DB['name']]['dbo'] = new PDO ($req,$DB['login'],$DB['passwd'],$options);
-                self::$PDO[$DB['name']]['TABLES'] = self::tableList($DB['name'],'TABLE_NAME');
+                self::$PDO[$DB['name']]['tables'] = self::tableList($DB['name'],'TABLE_NAME');
                 self::$PDO[$DB['name']]['type'] = $DB['type'];
 
                 // print_r(self::$PDO[$DB['name']]['TABLES']);
@@ -130,15 +130,16 @@ trait DBHandler {
     }
 
 
-    /**
+  /**
      *   test if table exists
      *
      *   @param 
      *   @return 
      */
-    final public function ifTableExists(string $tablename, string $dbname) : bool
+    final public function ifTableExists(string $dbname, string $tablename) : bool
     {
-        if(array_key_exists($tablename, self::$PDO[$dbname]['TABLES'])){
+        var_dump('>>>'.self::$PDO[$dbname]['tables']);
+        if(array_key_exists($tablename, self::$PDO[$dbname]['tables'])){
             return true;
         }
         else {
@@ -155,28 +156,13 @@ trait DBHandler {
      */
     final public static function getStaticTableList(string $dbname = '') 
     {
-        if (isset(self::$PDO[$dbname]['TABLES'])) {
-            return self::$PDO[$dbname]['TABLES'];
+        if (isset(self::$PDO[$dbname]['tables'])) {
+            return self::$PDO[$dbname]['tables'];
         }
         return [];
-    }
-    
+    }  
 
 
-    /**
-     *  
-     *
-     *   @param table_name:string
-     *   @return table_name:
-     */
-    final public function loadTable(string $dbname = null, string $tablename = null)
-    {       
-        self::getBaseInstance($dbname);
 
-        if (self::ifTableExists($tablename)) {
-            self::getBaseInstance('');
-        }
-
-    }
 
 }

@@ -15,6 +15,8 @@ class EPDO {
     public $currentDB = '';
     public $currentTable = '';
 
+    
+    
     /**
      *   Create Object EPDO
      *
@@ -48,14 +50,15 @@ class EPDO {
      *   @param table_name:string
      *   @return table_name:string
      */
-    final public function selectTable(string $tablename = null)
+    final public function selectTable(string $dbname = null, string $tablename = null)
     {
-        if (($this->issetTableInstance($tablename)) !== null) {
+        if ((DBHandler::ifTableExists($dbname, $tablename)) !== null) {
             $this->currentTable = $tablename;
         }
         return $this->currentTable;
     }
   
+
     
     /**
      *   Function to call table list
@@ -78,12 +81,11 @@ class EPDO {
         }
     }
 
-
     /**
      *   Create a PDO to database
      *
      *   @param string dbname
-     *   @return array
+     *   @return 
      */
     public function connect(array $params = []) {
         return DBHandler::connectDB($params);
@@ -93,12 +95,21 @@ class EPDO {
      *   Unset PDO
      *
      *   @param string dbname
-     *   @return array
+     *   @return void
      */
     public function unconnect(string $dbname) {
-        return DBHandler::unconnectDB($this->selectBase($dbname));
+        DBHandler::unconnectDB($this->selectBase($dbname));
     }
 
+
+    /**
+     *  laod tables defauts elemnts 
+     * 
+     *  
+     */
+    // public function loadTable(array $params = []) {
+    //     // return TableHandler::loadTable($params);
+    // }
 
 
 }
