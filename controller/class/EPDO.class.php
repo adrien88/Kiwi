@@ -1,10 +1,12 @@
 <?php
 
 
-// import traits
-include 'controller/includes/EPDO/DBHandler.trait.php';
-include 'controller/includes/EPDO/TableHandler.trait.php';
+// // 
+include __DIR__.'/EPDO/Tables.class.php';
 
+// // import traits
+include __DIR__.'/EPDO/DBHandler.trait.php';
+include __DIR__.'/EPDO/TableHandler.trait.php';
 
 class EPDO {
 
@@ -14,8 +16,6 @@ class EPDO {
     // DataBase name used
     public $currentDB = '';
     public $currentTable = '';
-
-    
     
     /**
      *   Create Object EPDO
@@ -107,9 +107,9 @@ class EPDO {
      * 
      *  
      */
-    // public function loadTable(array $params = []) {
-    //     // return TableHandler::loadTable($params);
-    // }
+    public function loadTable(array $params = []) {
+        echo TableHandler::createTable('test');
+    }
 
 
 }
