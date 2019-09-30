@@ -13,6 +13,16 @@
 *
 */
 
+
+// try { 
+// }
+// catch (ERROR $e){
+  // error handling
+// }
+
+
+
+
 trait QueryHandler {
 
     /**

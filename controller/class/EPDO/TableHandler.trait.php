@@ -1,5 +1,6 @@
 <?php
-// namespace EPDO\TableHandler;
+
+
 
 trait TableHandler {
 
@@ -7,20 +8,29 @@ trait TableHandler {
     public static $TABLES = [];
 
     /*
-    * TABLES [
-    *   tablename => [
-    *       
+    *   TABLES [
+    *       tablename => [
+    *           cols => [
+    *               name => [ type(varchar) ; maxlenght(int) ; regex(varchar) ]
+    *           ]
+    *           stack => [int => command]
     *       ]
     *   ]
     */
 
 
-    /**
-     *  Creer la table sur le handler
-     */
 
-    public final static function createTable() {
-        self::$TABLES[$tablename] =  new Tables(); 
+    /**
+     *  Supprimer la table du handler
+     */
+    public final static function createTable($newtablename) {
+        var_dump($newtablename);
+
+        $table = new Tables($newtablename);
+        
+        var_dump($table);
+
+        return $table->tablename;
     }
 
     /**

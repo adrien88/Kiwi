@@ -9,12 +9,16 @@ class Tables {
     private $STRUCT;
     private $DATA;
 
+    public $tablename; 
+
     /**
      * 
      */
-    public function __conctruct(array $struct){
-        
+    public function __construct($tablename){
+       
     }
+
+
 
 
     /**  
