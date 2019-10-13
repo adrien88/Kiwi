@@ -103,15 +103,43 @@ class EPDO {
 
 
     /**
-     *  laod tables defauts elemnts 
+     *  laod table : make TablbeHandler create a new obj Tables in his statics TBALES array
      *  
      *  @param
      *  @return 
      * 
      */
-    public function loadTable(array $params = []) {
-        echo TableHandler::createTable(self::selectBase(), 'pages_metas');
+    public function loadTable(string $tablename = '') {
+        
+        $tablename = self::selectTable($tablename);
+        if(isset($tablename)){
+            TableHandler::createTable(self::selectBase(), $tablename);
+        } 
     }
+
+
+    /**
+     *  save table : make TablbeHandler execute changes
+     *  
+     *  @param
+     *  @return 
+     * 
+     */
+    public function saveTable(string $tablename = '') {
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
