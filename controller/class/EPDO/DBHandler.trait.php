@@ -134,7 +134,6 @@ trait DBHandler {
      */
     final public function ifTableExists(string $dbname, string $tablename) : bool
     {
-        var_dump('>>>'.self::$PDO[$dbname]['tables']);
         if(array_key_exists($tablename, self::$PDO[$dbname]['tables'])){
             return true;
         }
