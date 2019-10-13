@@ -24,9 +24,10 @@ trait TableHandler {
      *  @param basename:string,tablename:string
      *  @return bool
      */
-    public final static function createTable(string $basename, string $newtablename) {
+    public final static function createTable(string $basename, string $newtablename) 
+    {
         // if table unstance
-        if (!TableHandler::issetTableInstance($newtablename)) {
+        if (!self::issetTableInstance($newtablename)) {
             self::$TABLES[$newtablename] = new Tables($basename, $newtablename);
             if (is_object(self::$TABLES[$newtablename])) {
                 echo ' - -> create table ok<br>';
@@ -37,10 +38,13 @@ trait TableHandler {
     }
 
     /**
-     *  Supprimer la table du handler
+     *  delete Table from Handler
      */
-    public final static function dropTable() {
-
+    public final static function dropTable(string $tablename = '') 
+    {
+        if (self::issetTableInstance($newtablename)) {
+            unset(self::$TABLES[$newtablename]);
+        }
     }
 
     /**
