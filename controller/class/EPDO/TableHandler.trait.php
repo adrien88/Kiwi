@@ -18,19 +18,17 @@ trait TableHandler {
     *   ]
     */
 
-
-
     /**
      *  Supprimer la table du handler
      */
-    public final static function createTable($newtablename) {
+    public final static function createTable(string $basename, string $newtablename) {
         var_dump($newtablename);
 
-        $table = new Tables($newtablename);
+        self::$TABLES[$newtablename] = new Tables($basename, $newtablename);
         
-        var_dump($table);
+        var_dump(self::$TABLES[$newtablename]);
 
-        return $table->tablename;
+        return $newtablename;
     }
 
     /**
@@ -49,7 +47,7 @@ trait TableHandler {
      */
     final public static function issetTableInstance(string $tablename = null)
     {
-        if (isset($database) && isset(self::$PDO[$database]['dbo'])) {
+        if (isset($tablename) && isset(self::$TABLES[$tablename])) {
             return true;
         }
         else {
@@ -57,14 +55,15 @@ trait TableHandler {
         }
     }
 
+
     /**
      *   select a database object (if selectable or selected)
      *
      */
     final public static function getTableInstance(string $tablename = null)
     {
-        if (isset($database) && self::issetBaseInstance($database)) {
-            return self::$PDO[$database]['dbo'];
+        if (self::issetTableInstance($tablename)) {
+            return self::$TABLES[$tablename];
         } 
         else {
             return false;
@@ -72,11 +71,20 @@ trait TableHandler {
     }
 
 
+
+
+    /**
+     *  MOVING NEXT METHODS to table object Later
+     *  preparing request handler first
+     * 
+     */
+
+
     /**
     *   load (or re-load) a tablee structure
     *
     */
-    final public function loadTableStruct(string $dbname, string $tablename, $fieldname = null)
+    final public function loadTableStruct(string $dbname, string $tablename, string $fieldname = null)
     {
         $data = [];
         $req = "SHOW COLUMNS FROM ".$tablename;
@@ -88,13 +96,12 @@ trait TableHandler {
             foreach($data as $colnum => $colData) {
                 $data[$colnum]['Lenght'] = preg_replace('#.*\(([0-9]+)\)$#','$1',$colData['Type']);
                 $data[$colnum]['Type'] = preg_replace('#(.*)\([0-9]+\)$#','$1',$colData['Type']);
-
-                if (isset($fieldname)) {
-                    if ($colData['Field'] == $fieldname) {
-                        $data[$colnum];
-                        break;
-                    }
+            
+                if (isset($fieldname) && $colData['Field'] == $fieldname) {
+                    $data[$colnum];
+                    break;
                 }
+                
             }
             return $data;
         }

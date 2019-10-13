@@ -14,11 +14,12 @@ class Tables {
     /**
      * 
      */
-    public function __construct($tablename){
-       
+    public function __construct($basename, $tablename){
+        
+        if (DBHandler::getBaseInstance($basename) != NULL) {
+            var_dump('load base ok');
+        }
     }
-
-
 
 
     /**  

@@ -52,7 +52,7 @@ class EPDO {
      */
     final public function selectTable(string $dbname = null, string $tablename = null)
     {
-        if ((DBHandler::ifTableExists($dbname, $tablename)) !== null) {
+        if ((DBHandler::ifTableExists(self::selectBase($dbname), $tablename)) !== null) {
             $this->currentTable = $tablename;
         }
         return $this->currentTable;
@@ -104,11 +104,13 @@ class EPDO {
 
     /**
      *  laod tables defauts elemnts 
-     * 
      *  
+     *  @param
+     *  @return 
+     * 
      */
     public function loadTable(array $params = []) {
-        echo TableHandler::createTable('test');
+        echo TableHandler::createTable(self::selectTable(),'test');
     }
 
 
