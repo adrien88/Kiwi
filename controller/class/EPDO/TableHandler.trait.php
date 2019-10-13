@@ -19,14 +19,20 @@ trait TableHandler {
     */
 
     /**
-     *  Créer un objet table
+     *  Create Table Object if not exists yet
+     * 
+     *  @param basename:string,tablename:string
+     *  @return bool
      */
     public final static function createTable(string $basename, string $newtablename) {
-        self::$TABLES[$newtablename] = new Tables($basename, $newtablename);
-        if (is_object(self::$TABLES[$newtablename])) {
-            echo ' - -> create table ok<br>';
-            return true;
-        } 
+        // if table unstance
+        if (!TableHandler::issetTableInstance($newtablename)) {
+            self::$TABLES[$newtablename] = new Tables($basename, $newtablename);
+            if (is_object(self::$TABLES[$newtablename])) {
+                echo ' - -> create table ok<br>';
+                return true;
+            } 
+        }
         return false;
     }
 
