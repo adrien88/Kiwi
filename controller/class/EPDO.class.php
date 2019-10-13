@@ -35,7 +35,7 @@ class EPDO {
      *   @param base_name:string
      *   @return base_name:string
      */
-    final public function selectBase(string $basename = null)
+    final public function selectBase(string $basename = '')
     {
         if ((DBHandler::issetBaseInstance($basename)) != null) {
             $this->currentDB = $basename;
@@ -50,7 +50,7 @@ class EPDO {
      *   @param table_name:string
      *   @return table_name:string
      */
-    final public function selectTable(string $dbname = null, string $tablename = null)
+    final public function selectTable(string $dbname = '', string $tablename = '')
     {
         if ((DBHandler::ifTableExists(self::selectBase($dbname), $tablename)) !== null) {
             $this->currentTable = $tablename;
@@ -110,7 +110,7 @@ class EPDO {
      * 
      */
     public function loadTable(array $params = []) {
-        echo TableHandler::createTable(self::selectTable(),'test');
+        echo TableHandler::createTable(self::selectBase(), 'pages_metas');
     }
 
 

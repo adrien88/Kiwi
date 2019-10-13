@@ -19,16 +19,15 @@ trait TableHandler {
     */
 
     /**
-     *  Supprimer la table du handler
+     *  Créer un objet table
      */
     public final static function createTable(string $basename, string $newtablename) {
-        var_dump($newtablename);
-
         self::$TABLES[$newtablename] = new Tables($basename, $newtablename);
-        
-        var_dump(self::$TABLES[$newtablename]);
-
-        return $newtablename;
+        if (is_object(self::$TABLES[$newtablename])) {
+            echo ' - -> create table ok<br>';
+            return true;
+        } 
+        return false;
     }
 
     /**
